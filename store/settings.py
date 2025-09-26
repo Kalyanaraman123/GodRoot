@@ -9,6 +9,9 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app']
 CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -57,13 +60,19 @@ WSGI_APPLICATION = "store.wsgi.application"
 # Database (safe default)
 # -----------------------
 # On your laptop it uses sqlite; on Vercel, set DATABASE_URL env var to use Postgres.
+
+
 if os.environ.get("DATABASE_URL"):
+    # Use external Postgres database
     DATABASES = {
         "default": dj_database_url.parse(
-            os.environ["DATABASE_URL"], conn_max_age=600
+            os.environ["DATABASE_URL"],
+            conn_max_age=600,       # Keep connection alive for performance
+            ssl_require=True        # Ensure SSL for Neon/Supabase
         )
     }
 else:
+    # Fallback to local SQLite for development
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
