@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}TIMEO{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {# Top header area is provided by pages; default minimal header here #}
+  <header>
+    {% block site_header %}
+      <div style="padding:12px;border-bottom:1px solid #eee;background:#fff;">
+        <div style="max-width:1200px;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between">
+          <a href="{% url 'shop:home' %}" style="font-weight:700;text-decoration:none;color:#111">TIMEO</a>
+          {# No hardcoded Cart or My Store text here; pages can override site_header if needed #}
+        </div>
+      </div>
+    {% endblock %}
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

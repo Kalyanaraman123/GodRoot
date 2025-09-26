@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.12"
+    }
+  },
+  "buildCommand": "pip install -r requirements.txt && python3 manage.py collectstatic --noinput && python3 manage.py migrate"
+}

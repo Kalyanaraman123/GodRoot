@@ -1,0 +1,25 @@
+<div class="quick-view-content">
+    <button class="close-quick">X</button>
+    <h2>{{ product.title }}</h2>
+
+    {% with first_variant=product.variants.all|first %}
+      {% if product.images.all %}
+        <img src="{{ product.images.all.0.image.url }}" style="max-width:200px;">
+      {% endif %}
+      {% if first_variant %}
+        <p class="price">Price: ₹{{ first_variant.price }}</p>
+      {% else %}
+        <p class="price">Price: Not available</p>
+      {% endif %}
+    {% endwith %}
+
+    <p>{{ product.description|truncatechars:200 }}</p>
+    <form method="post" action="/cart/add/{{ product.variants.all.0.id }}/">
+        {% csrf_token %}
+        <input type="number" name="quantity" value="1" min="1">
+        <button type="submit">Add to Cart</button>
+    </form>
+</div>
+<script>
+$(document).on('click', '.close-quick', function(){ $('#quickModal').hide().html(''); });
+</script>

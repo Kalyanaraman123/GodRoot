@@ -1,0 +1,77 @@
+/* modal: default hidden, show when .open is present */
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;              /* hide by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;              /* high so it overlays everything */
+}
+
+/* visible state */
+.modal.open { 
+  display: flex !important;   /* force visible even if other CSS conflicts */
+}
+
+/* modal card */
+.modal-card {
+  background: #fff;
+  border-radius: 10px;
+  max-width: 980px;
+  width: 96%;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+/* close button style (if you want inside modal) */
+.modal .close-btn {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #eee;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* logo header (site-wide) */
+.logo-header{
+  padding:16px;
+  border-bottom:1px solid #eee;
+  background: #fce7f3; /* light blue */
+}
+.logo-container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 18px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* IMPORTANT: force the logo height so it never appears huge */
+.logo-container img {
+  height: 60px;       /* change this value to make it larger/smaller */
+  width: auto;
+  display:block;
+  object-fit: contain;
+}
+
+/* small responsive tweak */
+@media (max-width:420px){
+  .logo-container img { height:48px; }
+}
+
+/* optional: prevent pointer-events on card children from blocking backdrop detect */
+.modal-card * { pointer-events: auto; }

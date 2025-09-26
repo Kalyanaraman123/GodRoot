@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}My Site{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+<header>
+  {% block site_header %}
+<div class="logo-header">
+  <div class="logo-container">
+    <a href="{% url 'shop:home' %}">
+      <img src="{% static 'img/logo.png' %}" alt="GodRoot Logo">
+    </a>
+  </div>
+</div>
+
+  {% endblock %}
+</header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}
+  <!-- jQuery (optional; used by site.js if present) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Your site script (pure JS file) -->
+  <script src="{% static 'js/site.js' %}"></script>
+{% endblock %}
+
+</body>
+</html>

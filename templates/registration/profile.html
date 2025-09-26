@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div style="max-width:900px;margin:36px auto;padding:20px;background:#fff;border:1px solid #eee;border-radius:10px">
+  <h2 style="margin-bottom:8px">My Account</h2>
+  <p class="muted">Hello, <strong>{{ user.get_full_name|default:user.username }}</strong></p>
+
+  <div style="display:flex;gap:18px;margin-top:18px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:220px">
+      <h4>Profile</h4>
+      <p>Email: {{ user.email|default:"—" }}</p>
+      <p>Member since: {{ user.date_joined|date:"F j, Y" }}</p>
+    </div>
+
+    <div style="flex:1;min-width:220px">
+      <h4>Quick links</h4>
+      <ul>
+        <li><a href="{% url 'shop:cart' %}">View Cart</a></li>
+        <li><a href="{% url 'shop:home' %}">Continue Shopping</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <hr style="margin:18px 0;border:none;border-top:1px solid #f0f0f0">
+
+  <h4>Orders</h4>
+  <p class="muted">You have no past orders yet. (This is a placeholder — if you want an order list here I can add it.)</p>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% for item in cart %}
+  <tr>
+    <td>{{ item.variant.product.title }} ({{ item.variant.size }})</td>
+    <td>{{ item.quantity }}</td>
+    <td>₹{{ item.price }}</td>
+  </tr>
+{% endfor %}
