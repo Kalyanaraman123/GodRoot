@@ -1,14 +1,16 @@
-{
+﻿{
   "version": 2,
-  "buildCommand": "python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt && python3 manage.py collectstatic --noinput",
-  "outputDirectory": "staticfiles",
+  "installCommand": "python3 -m pip install --upgrade pip",
+  "buildCommand": "python3 -m pip install -r requirements.txt && python3 manage.py collectstatic --noinput && python3 manage.py migrate",
   "functions": {
     "api/index.py": {
-      "runtime": "python3.11"
+      "runtime": "python3.12",
+      "maxDuration": 10,
+      "memory": 1024
     }
   },
-  "rewrites": [
-    { "source": "/static/(.*)", "destination": "/static/$1" },
-    { "source": "/(.*)", "destination": "/api/index.py" }
+  "routes": [
+    { "src": "^/static/(.*)$", "dest": "/api/index.py" },
+    { "src": ".*", "dest": "/api/index.py" }
   ]
 }
