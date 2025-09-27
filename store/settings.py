@@ -7,8 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-insecure-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app']
-CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', '.now.sh']
+CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app', 'https://*.now.sh']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -26,7 +26,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # serve static on Vercel
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise for static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -40,7 +40,7 @@ ROOT_URLCONF = "store.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],   # you already have templates/
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -56,23 +56,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "store.wsgi.application"
 
-# -----------------------
-# Database (safe default)
-# -----------------------
-# On your laptop it uses sqlite; on Vercel, set DATABASE_URL env var to use Postgres.
-
-
+# Database configuration
 if os.environ.get("DATABASE_URL"):
-    # Use external Postgres database
     DATABASES = {
         "default": dj_database_url.parse(
             os.environ["DATABASE_URL"],
-            conn_max_age=600,       # Keep connection alive for performance
-            ssl_require=True        # Ensure SSL for Neon/Supabase
+            conn_max_age=600,
+            ssl_require=True
         )
     }
 else:
-    # Fallback to local SQLite for development
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -87,21 +80,29 @@ TIME_ZONE = "Asia/Kolkata"
 USE_I18N = True
 USE_TZ = True
 
-# -------------
-# Static / media
-# -------------
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]  # you have /static with css, js, img
+# Static files configuration for Vercel
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# WhiteNoise configuration for Vercel
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# For development, use simpler storage
+if DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-# Razorpay (optional)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Razorpay configuration
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET", "")
 
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/login/"
+
+# WhiteNoise settings
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_MANIFEST_STRICT = False  # This allows missing files
+WHITENOISE_ALLOW_ALL_ORIGINS = True
