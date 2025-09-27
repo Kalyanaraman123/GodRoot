@@ -90,7 +90,7 @@
             {% if p.images.all %}
               <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}" class="product-image">
             {% else %}
-               <img src="{% static 'img/product-' %}{{ forloop.counter }}.jpg" alt="{{ p.title }}" class="product-image">
+               <img src="{% static 'img/design-' %}{{ forloop.counter }}.jpg" alt="{{ p.title }}" class="product-image">
             {% endif %}
             <div class="product-overlay">
               <a href="{% url 'shop:product_detail' p.slug %}" class="quick-view">Quick View</a>
