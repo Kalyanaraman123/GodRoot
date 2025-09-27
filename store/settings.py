@@ -3,7 +3,6 @@ import os
 import dj_database_url
 from urllib.parse import quote_plus
 
-
 # ------------------------------
 # BASE DIRECTORY
 # ------------------------------
@@ -14,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------
 SECRET_KEY = os.environ.get("SECRET_KEY", "replace-this-with-a-secure-secret")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', '.now.sh']
 
 # ------------------------------
 # INSTALLED APPS
@@ -35,7 +34,7 @@ INSTALLED_APPS = [
 # ------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # serve static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -52,7 +51,7 @@ ROOT_URLCONF = 'store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # project-level templates
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,23 +70,28 @@ WSGI_APPLICATION = 'store.wsgi.application'
 # ------------------------------
 # DATABASE
 # ------------------------------
-# Make sure to URL-encode any special characters in the password
-password = quote_plus("Mithun1@")  # ensures special chars are encoded
-DATABASE_URL = os.environ.get(
-    "DATABASE_URL",
-    f"postgres://postgres:{password}@127.0.0.1:5432/mydb"
-)
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mydb",
-        "USER": "postgres",
-        "PASSWORD": "Mithun1@",
-        "HOST": "127.0.0.1",
-        "PORT": 5432,
+# Use DATABASE_URL if available (for Vercel), otherwise local PostgreSQL
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
-}
-
+else:
+    # Local development
+    password = quote_plus("Mithun1@")
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "mydb",
+            "USER": "postgres",
+            "PASSWORD": "Mithun1@",
+            "HOST": "127.0.0.1",
+            "PORT": 5432,
+        }
+    }
 
 # ------------------------------
 # PASSWORD VALIDATION
@@ -103,14 +107,23 @@ USE_I18N = True
 USE_TZ = True
 
 # ------------------------------
-# STATIC FILES
+# STATIC FILES - FIXED
 # ------------------------------
-STATIC_URL = '/static/'  # must end with slash
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR.parent / 'frontend' / 'public',  # frontend/public
+    BASE_DIR / 'static',  # ✅ Your static files are here
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# Use simple storage for now to avoid manifest issues
+# Use this temporarily
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+# Instead of this (which causes manifest issues)
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Once working, you can switch back to:
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ------------------------------
 # MEDIA FILES
@@ -129,3 +142,8 @@ RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', '')
 # ------------------------------
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
+
+# ------------------------------
+# VERCEL SPECIFIC
+# ------------------------------
+CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app', 'https://*.now.sh']

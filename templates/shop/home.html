@@ -87,12 +87,18 @@
         {% with first_variant=p.variants.all|first %}
         <article class="product-card" data-id="{{ p.id }}" data-title="{{ p.title|escapejs }}">
           <div class="product-media">
-            {% if p.images.all %}
+           {% if p.images.all %}
   <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}" class="product-image">
 {% else %}
-  {% with static_image='img/design-'|add:forloop.counter|add:'.jpg' %}
-    <img src="{% static static_image %}" alt="{{ p.title }}" class="product-image">
-  {% endwith %}
+  {% if forloop.counter == 1 %}
+    <img src="{% static 'img/design-1.jpg' %}" alt="{{ p.title }}" class="product-image">
+  {% elif forloop.counter == 2 %}
+    <img src="{% static 'img/design-2.jpg' %}" alt="{{ p.title }}" class="product-image">
+  {% elif forloop.counter == 3 %}
+    <img src="{% static 'img/design-3.jpg' %}" alt="{{ p.title }}" class="product-image">
+  {% else %}
+    <img src="{% static 'img/product-placeholder.jpg' %}" alt="{{ p.title }}" class="product-image">
+  {% endif %}
 {% endif %}
             <div class="product-overlay">
               <a href="{% url 'shop:product_detail' p.slug %}" class="quick-view">Quick View</a>
