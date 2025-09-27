@@ -2,36 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}My Site{% endblock %}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}TIMEO — Site{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block head %}{% endblock %}
 </head>
 <body>
-<header>
-  {% block site_header %}
-<div class="logo-header">
-  <div class="logo-container">
-    <a href="{% url 'shop:home' %}">
-      <img src="{% static 'img/logo.png' %}" alt="GodRoot Logo">
-    </a>
+  <!-- FULL-BLEED HEADER BACKGROUND -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <!-- top row (hamburger left, logo center, actions right) -->
+      <div class="header-top">
+        <!-- left: hamburger + anchored dropdown (desktop) -->
+        <div class="left">
+          <button id="hamburgerBtn" class="hamburger" aria-label="Open menu" aria-expanded="false" type="button">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+          </button>
+
+          <div id="hamburgerDropdown" class="hamburger-dropdown" aria-hidden="true">
+            <nav>
+              <a href="#men">Men</a>
+              <a href="#women">Women</a>
+              <a href="#collections">Collections</a>
+              <a href="#new">New</a>
+              <hr>
+              {% for cat in categories %}
+                <a href="{% url 'shop:home' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+              {% empty %}
+                <div class="muted">No categories</div>
+              {% endfor %}
+            </nav>
+          </div>
+        </div>
+
+        <!-- center: logo -->
+        <div class="brand-wrap" role="link">
+          <a href="{% url 'shop:home' %}" class="brand-link">
+            <img src="{% static 'img/logo.png' %}" alt="TIMEO" class="logo-img">
+          </a>
+        </div>
+
+        <!-- right: actions -->
+        <div class="header-actions" role="toolbar" aria-label="Top actions">
+          <button id="searchBtn" class="icon-btn" title="Search" aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+
+          {% if user.is_authenticated %}
+            <button id="logoutBtn" class="icon-btn" title="Logout" aria-label="Logout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M7 6v12"/>
+              </svg>
+            </button>
+          {% else %}
+            <button id="loginBtn" class="login-btn" title="Login" aria-label="Login">
+              Login
+            </button>
+          {% endif %}
+
+          <a class="icon-btn" href="{% url 'shop:cart' %}" title="Cart" aria-label="Cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 6h15l-1.5 9h-11z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+            <span class="icon-badge">{{ cart.get_total_price|default:0 }}</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- second row: username line at right-most -->
+      <div class="header-bottom">
+        {% if user.is_authenticated %}
+          <div class="username-line">Hi, <strong>{{ user.username }}</strong></div>
+        {% else %}
+          <div class="username-line muted">Welcome</div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- FULL-BLEED TICKER -->
+  <div class="site-ticker" role="region" aria-label="Top offers">
+    <div class="ticker">
+      <div class="ticker-inner">
+        <strong>OFFER</strong>
+        <div class="marquee" aria-hidden="false">
+          <div class="track">FLAT 20% OFF on first order • Free shipping on ₹999+ • New Autumn Collection — Buy 2 get 1 on selected tees • Use code TIMEO20</div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-  {% endblock %}
-</header>
+  <!-- SEARCH MODAL -->
+  <div id="searchModal" class="modal" aria-hidden="true" style="display:none;">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Search">
+      <button id="searchClose" class="close-btn" aria-label="Close">✕</button>
+      <h3>Search products</h3>
+      <form id="searchForm" method="get" action="{% url 'shop:home' %}">
+        <input name="q" id="q" placeholder="Search for t-shirt, hoodie, shirt..." class="search-input" />
+      </form>
+    </div>
+  </div>
 
-  <main>
+  <!-- MOBILE DRAWER -->
+  <aside id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-inner">
+      <div style="display:flex;justify-content:flex-end;">
+        <button id="drawerClose" class="drawer-close" aria-label="Close">✕</button>
+      </div>
+
+      <nav class="drawer-nav" style="margin-top:12px; display:flex;flex-direction:column; gap:8px;">
+        <a href="#men">Men</a>
+        <a href="#women">Women</a>
+        <a href="#collections">Collections</a>
+        <a href="#new">New</a>
+        <hr>
+        {% for cat in categories %}
+          <a href="{% url 'shop:home' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+        {% empty %}
+          <div class="muted">No categories</div>
+        {% endfor %}
+      </nav>
+
+      <div style="margin-top:18px; display:flex; flex-direction:column; gap:10px;">
+        {% if user.is_authenticated %}
+          <a class="small-btn" href="/accounts/profile/">Account</a>
+          <button id="drawerLogout" class="small-btn" type="button">Logout</button>
+        {% else %}
+          <button id="drawerLogin" class="small-btn" type="button">Login</button>
+        {% endif %}
+        <a class="small-btn" href="{% url 'shop:cart' %}">Cart</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- SITE CONTENT (ABSOLUTELY NO MARGINS) -->
+  <main class="site">
     {% block content %}{% endblock %}
   </main>
 
-  {% block scripts %}
-  <!-- jQuery (optional; used by site.js if present) -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-  <!-- Your site script (pure JS file) -->
   <script src="{% static 'js/site.js' %}"></script>
-{% endblock %}
-
+  {% block scripts %}{% endblock %}
 </body>
 </html>
