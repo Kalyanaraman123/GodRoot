@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="hero-right">
-      <img src="{% static 'img/design2.jpg' %}" alt="Hero image" class="hero-image">
+      <img src="{% static 'img/design2.jpeg' %}" alt="Hero image" class="hero-image">
     </div>
   </section>
 
@@ -55,7 +55,7 @@
     <div class="collections-grid">
       <div class="collection-card">
         <div class="collection-image">
-           <img src="{% static 'img/design1.jpg' %}" alt="Men's Collection">
+           <img src="{% static 'img/design1.jpeg' %}" alt="Men's Collection">
         </div>
         <div class="collection-content">
           <h3>Men's Collection</h3>
@@ -65,7 +65,7 @@
       </div>
       <div class="collection-card">
         <div class="collection-image">
-          <img src="{% static 'img/design2.jpg' %}" alt="Women's Collection">
+          <img src="{% static 'img/design2.jpeg' %}" alt="Women's Collection">
         </div>
         <div class="collection-content">
           <h3>Women's Collection</h3>
@@ -91,13 +91,13 @@
   <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}" class="product-image">
 {% else %}
   {% if forloop.counter == 1 %}
-    <img src="{% static 'img/design1.jpg' %}" alt="{{ p.title }}" class="product-image">
+    <img src="{% static 'img/design1.jpeg' %}" alt="{{ p.title }}" class="product-image">
   {% elif forloop.counter == 2 %}
-    <img src="{% static 'img/design2.jpg' %}" alt="{{ p.title }}" class="product-image">
+    <img src="{% static 'img/design2.jpeg' %}" alt="{{ p.title }}" class="product-image">
   {% elif forloop.counter == 3 %}
-    <img src="{% static 'img/design3.jpg' %}" alt="{{ p.title }}" class="product-image">
+    <img src="{% static 'img/design3.jpeg' %}" alt="{{ p.title }}" class="product-image">
   {% else %}
-    <img src="{% static 'img/design4.jpg' %}" alt="{{ p.title }}" class="product-image">
+    <img src="{% static 'img/design4.jpeg' %}" alt="{{ p.title }}" class="product-image">
   {% endif %}
 {% endif %}
             <div class="product-overlay">
