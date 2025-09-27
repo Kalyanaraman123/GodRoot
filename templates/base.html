@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}TIMEO — Site{% endblock %}</title>
+  <title>{% block title %}GodRoot — Site{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block head %}{% endblock %}
@@ -39,7 +39,7 @@
         <!-- center: logo -->
         <div class="brand-wrap" role="link">
           <a href="{% url 'shop:home' %}" class="brand-link">
-            <img src="{% static 'img/logo.png' %}" alt="TIMEO" class="logo-img">
+            <img src="{% static 'img/logo.png' %}" alt="GodRoot" class="logo-img">
           </a>
         </div>
 
@@ -80,7 +80,7 @@
         {% if user.is_authenticated %}
           <div class="username-line">Hi, <strong>{{ user.username }}</strong></div>
         {% else %}
-          <div class="username-line muted">Welcome to TIMEO</div>
+          <div class="username-line muted">Welcome to GodRoot</div>
         {% endif %}
       </div>
     </div>
@@ -92,7 +92,7 @@
       <div class="ticker-inner">
         <strong>OFFER</strong>
         <div class="marquee" aria-hidden="false">
-          <div class="track">FLAT 20% OFF on first order • Free shipping on ₹999+ • New Autumn Collection — Buy 2 get 1 on selected tees • Use code TIMEO20</div>
+          <div class="track">FLAT 20% OFF on first order • Free shipping on ₹999+ • New Autumn Collection — Buy 2 get 1 on selected tees • Use code GodRoot20</div>
         </div>
       </div>
     </div>
