@@ -39,7 +39,6 @@ body {
   padding: 1rem 0;
 }
 
-/* Hamburger and Navigation */
 .hamburger {
   background: none;
   border: none;
@@ -47,32 +46,37 @@ body {
   padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
+  z-index: 1001;
 }
 
 .bar {
-  width: 20px;
+  width: 24px;
   height: 2px;
   background: #333;
   transition: 0.3s;
+}
+.hamburger:hover .bar {
+  background: #000;
 }
 
 .hamburger-dropdown {
   display: none;
   position: absolute;
   top: 100%;
-  left: 0;
+  left: 20px;
   background: #fff;
   border: 1px solid #f0f0f0;
-  padding: 1rem;
-  min-width: 200px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  min-width: 250px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
 
 .hamburger-dropdown nav {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .hamburger-dropdown a {
@@ -80,12 +84,23 @@ body {
   color: #333;
   padding: 0.5rem 0;
   transition: color 0.3s;
+  font-size: 1rem;
 }
 
 .hamburger-dropdown a:hover {
   color: #000;
+  font-weight: 500;
 }
 
+.hamburger-dropdown hr {
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  margin: 1rem 0;
+}
+
+.hamburger-dropdown.open {
+  display: block;
+}
 /* Brand/Logo */
 .brand-wrap {
   position: absolute;
@@ -674,12 +689,12 @@ body {
 .drawer {
   position: fixed;
   top: 0;
-  left: -300px;
+  left: -100%;
   width: 300px;
   height: 100%;
   background: #fff;
   z-index: 2000;
-  transition: left 0.3s;
+  transition: left 0.3s ease;
   box-shadow: 2px 0 12px rgba(0,0,0,0.1);
 }
 
@@ -693,24 +708,39 @@ body {
   overflow-y: auto;
 }
 
+
 .drawer-close {
   background: none;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  padding: 0.5rem;
 }
+
 
 .drawer-nav {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .drawer-nav a {
   text-decoration: none;
   color: #333;
-  padding: 0.5rem 0;
   font-size: 1.1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.drawer-nav a:last-child {
+  border-bottom: none;
+}
+
+.drawer-nav hr {
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  margin: 1rem 0;
 }
 
 .small-btn {

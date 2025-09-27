@@ -236,11 +236,12 @@
     /* -----------------------
        4) Hamburger / drawer behavior
        ----------------------- */
-    var hamburgerBtn = document.getElementById('hamburgerBtn');
-    var drawer = document.getElementById('drawer');
-    var drawerClose = document.getElementById('drawerClose');
-    var hamburgerDropdown = document.getElementById('hamburgerDropdown');
+       const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const drawer = document.getElementById('drawer');
+    const drawerClose = document.getElementById('drawerClose');
+    const hamburgerDropdown = document.getElementById('hamburgerDropdown');
 
+    // Function to close all menus
     function closeAllMenus() {
       if (drawer) {
         drawer.classList.remove('open');
@@ -253,62 +254,66 @@
       if (hamburgerBtn) {
         hamburgerBtn.setAttribute('aria-expanded', 'false');
       }
+      document.body.style.overflow = '';
     }
 
+    // Hamburger button click
     if (hamburgerBtn) {
       hamburgerBtn.addEventListener('click', function (e) {
         e.stopPropagation();
-        var isMobile = window.innerWidth <= 880;
+        const isMobile = window.innerWidth <= 768;
         
-        if (isMobile && drawer) {
-          var isOpen = drawer.classList.contains('open');
-          closeAllMenus();
-          if (!isOpen) {
-            drawer.classList.add('open');
-            drawer.setAttribute('aria-hidden', 'false');
-            hamburgerBtn.setAttribute('aria-expanded', 'true');
+        if (isMobile) {
+          // Mobile: toggle drawer
+          if (drawer) {
+            const isOpen = drawer.classList.contains('open');
+            closeAllMenus();
+            if (!isOpen) {
+              drawer.classList.add('open');
+              drawer.setAttribute('aria-hidden', 'false');
+              hamburgerBtn.setAttribute('aria-expanded', 'true');
+              document.body.style.overflow = 'hidden';
+            }
           }
-        } else if (hamburgerDropdown) {
-          var isOpen = hamburgerDropdown.classList.contains('open');
-          closeAllMenus();
-          if (!isOpen) {
-            hamburgerDropdown.classList.add('open');
-            hamburgerDropdown.setAttribute('aria-hidden', 'false');
-            hamburgerBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          // Desktop: toggle dropdown
+          if (hamburgerDropdown) {
+            const isOpen = hamburgerDropdown.classList.contains('open');
+            closeAllMenus();
+            if (!isOpen) {
+              hamburgerDropdown.classList.add('open');
+              hamburgerDropdown.setAttribute('aria-hidden', 'false');
+              hamburgerBtn.setAttribute('aria-expanded', 'true');
+            }
           }
         }
       });
     }
 
-    // Close drawer/dropdown when clicking close button
+    // Close drawer button
     if (drawerClose) {
       drawerClose.addEventListener('click', closeAllMenus);
     }
 
     // Close menus when clicking outside
     document.addEventListener('click', function(e) {
-      var target = e.target;
-      if (!drawer?.contains(target) && !hamburgerBtn?.contains(target) && !hamburgerDropdown?.contains(target)) {
+      if (!drawer?.contains(e.target) && 
+          !hamburgerBtn?.contains(e.target) && 
+          !hamburgerDropdown?.contains(e.target)) {
         closeAllMenus();
       }
     });
 
-    // Close menus on escape key
+    // Close on escape key
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' || e.key === 'Esc') {
+      if (e.key === 'Escape') {
         closeAllMenus();
       }
     });
 
-    // Responsive behavior - close appropriate menu on resize
+    // Close appropriate menu on resize
     window.addEventListener('resize', function() {
-      if (window.innerWidth > 880 && drawer) {
-        drawer.classList.remove('open');
-        drawer.setAttribute('aria-hidden', 'true');
-      } else if (hamburgerDropdown) {
-        hamburgerDropdown.classList.remove('open');
-        hamburgerDropdown.setAttribute('aria-hidden', 'true');
-      }
+      closeAllMenus();
     });
 
     /* -----------------------
