@@ -55,7 +55,7 @@
     <div class="collections-grid">
       <div class="collection-card">
         <div class="collection-image">
-          <img src="https://picsum.photos/600/800?random=21" alt="Men's Collection">
+           <img src="{% static 'img/design1.jpg' %}" alt="Men's Collection">
         </div>
         <div class="collection-content">
           <h3>Men's Collection</h3>
@@ -65,7 +65,7 @@
       </div>
       <div class="collection-card">
         <div class="collection-image">
-          <img src="https://picsum.photos/600/800?random=22" alt="Women's Collection">
+          <img src="{% static 'img/design2.jpg' %}" alt="Women's Collection">
         </div>
         <div class="collection-content">
           <h3>Women's Collection</h3>
@@ -90,7 +90,7 @@
             {% if p.images.all %}
               <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}" class="product-image">
             {% else %}
-              <img src="https://picsum.photos/400/500?random={{ forloop.counter }}" alt="{{ p.title }}" class="product-image">
+               <img src="{% static 'img/product-' %}{{ forloop.counter }}.jpg" alt="{{ p.title }}" class="product-image">
             {% endif %}
             <div class="product-overlay">
               <a href="{% url 'shop:product_detail' p.slug %}" class="quick-view">Quick View</a>
