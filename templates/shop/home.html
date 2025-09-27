@@ -9,67 +9,118 @@
   <section class="hero">
     <div class="hero-left">
       <h1>Modern wardrobe essentials — refined</h1>
-      <p class="muted">Black, white and grey staples made with premium fabrics. Free delivery on orders over ₹999.</p>
+      <p class="hero-subtitle">Black, white and grey staples made with premium fabrics. Free delivery on orders over ₹999.</p>
       <div class="hero-cta">
         <a class="btn-primary" href="#collections">Shop Collections</a>
+        <a class="btn-secondary" href="#products">Browse All</a>
       </div>
     </div>
     <div class="hero-right">
-      <img src="https://picsum.photos/900/600?random=12" alt="Hero image">
+      <img src="https://picsum.photos/900/600?random=12" alt="Hero image" class="hero-image">
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🚚</div>
+        <h3>Free Shipping</h3>
+        <p>On orders over ₹999</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">↩️</div>
+        <h3>Easy Returns</h3>
+        <p>30-day return policy</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔒</div>
+        <h3>Secure Payment</h3>
+        <p>100% secure transactions</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⭐</div>
+        <h3>Premium Quality</h3>
+        <p>Premium fabrics & craftsmanship</p>
+      </div>
     </div>
   </section>
 
   <!-- COLLECTIONS -->
   <section id="collections" class="collections">
-    <div class="col-card">
-      <img src="https://picsum.photos/1200/900?random=21" alt="Collection 1">
-      <div class="cap">Men's Collection</div>
+    <div class="section-header">
+      <h2>Collections</h2>
+      <p>Explore our curated collections</p>
     </div>
-    <div class="col-card">
-      <img src="https://picsum.photos/1200/900?random=22" alt="Collection 2">
-      <div class="cap">Women's Collection</div>
+    <div class="collections-grid">
+      <div class="collection-card">
+        <div class="collection-image">
+          <img src="https://picsum.photos/600/800?random=21" alt="Men's Collection">
+        </div>
+        <div class="collection-content">
+          <h3>Men's Collection</h3>
+          <p>Essential styles for everyday wear</p>
+          <a href="{% url 'shop:home' %}?category=men" class="collection-link">Shop Now →</a>
+        </div>
+      </div>
+      <div class="collection-card">
+        <div class="collection-image">
+          <img src="https://picsum.photos/600/800?random=22" alt="Women's Collection">
+        </div>
+        <div class="collection-content">
+          <h3>Women's Collection</h3>
+          <p>Timeless pieces for modern women</p>
+          <a href="{% url 'shop:home' %}?category=women" class="collection-link">Shop Now →</a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- PRODUCTS GRID - 4 per row, ABSOLUTELY NO MARGINS -->
-  <section class="products">
-    <h2>Featured Products</h2>
+  <!-- PRODUCTS GRID -->
+  <section id="products" class="products">
+    <div class="section-header">
+      <h2>Featured Products</h2>
+      <p>Our most popular essentials</p>
+    </div>
     <div class="products-grid">
       {% for p in products %}
         {% with first_variant=p.variants.all|first %}
-        <article class="card" data-id="{{ p.id }}" data-title="{{ p.title|escapejs }}">
-          <div class="media">
+        <article class="product-card" data-id="{{ p.id }}" data-title="{{ p.title|escapejs }}">
+          <div class="product-media">
             {% if p.images.all %}
-              <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}">
+              <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}" class="product-image">
             {% else %}
-              <img src="https://picsum.photos/800/800?random={{ forloop.counter }}" alt="{{ p.title }}">
+              <img src="https://picsum.photos/400/500?random={{ forloop.counter }}" alt="{{ p.title }}" class="product-image">
             {% endif %}
+            <div class="product-overlay">
+              <a href="{% url 'shop:product_detail' p.slug %}" class="quick-view">Quick View</a>
+            </div>
           </div>
-          <div class="body">
-            <h3>{{ p.title }}</h3>
+          <div class="product-body">
+            <h3 class="product-title">{{ p.title }}</h3>
             {% if first_variant %}
-              <div class="price">₹{{ first_variant.price }}</div>
+              <div class="product-price">₹{{ first_variant.price }}</div>
             {% else %}
-              <div class="price">—</div>
+              <div class="product-price">—</div>
             {% endif %}
-            <div class="muted sizes">
+            <div class="product-sizes">
               {% if p.variants.exists %}
                 Sizes:
                 {% for v in p.variants.all %}
-                  {{ v.size }}{% if not forloop.last %} •{% endif %}
+                  <span class="size-tag">{{ v.size }}</span>{% if not forloop.last %} {% endif %}
                 {% endfor %}
               {% else %}
                 —
               {% endif %}
             </div>
 
-            <div class="card-actions">
-              <a class="small-btn" href="{% url 'shop:product_detail' p.slug %}">View</a>
+            <div class="product-actions">
+              <a class="btn-product" href="{% url 'shop:product_detail' p.slug %}">View Details</a>
               {% if first_variant %}
                 <form method="post" action="{% url 'shop:cart_add' first_variant.id %}" class="inline-form">
                   {% csrf_token %}
                   <input type="hidden" name="quantity" value="1">
-                  <button class="small-btn" type="submit">Add</button>
+                  <button class="btn-product add-to-cart" type="submit">Add to Cart</button>
                 </form>
               {% endif %}
             </div>
@@ -77,8 +128,23 @@
         </article>
         {% endwith %}
       {% empty %}
-        <div class="muted" style="grid-column: 1 / -1; text-align: center; padding: 40px;">No products available.</div>
+        <div class="no-products" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+          <h3>No products available at the moment</h3>
+          <p class="muted">Check back soon for new arrivals!</p>
+        </div>
       {% endfor %}
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Get early access to new collections and exclusive offers</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" class="newsletter-input">
+        <button type="submit" class="btn-primary">Subscribe</button>
+      </form>
     </div>
   </section>
 </div>
@@ -87,55 +153,66 @@
 <footer class="site-footer" role="contentinfo">
   <div class="footer-inner">
     <div class="footer-grid">
-      <div class="col">
+      <div class="footer-col">
+        <div class="footer-brand">
+          <img src="{% static 'img/logo.png' %}" alt="TIMEO" class="footer-logo">
+          <p>Modern wardrobe essentials — refined</p>
+        </div>
+      </div>
+
+      <div class="footer-col">
         <h4>Shop</h4>
         <ul>
-          <li><a href="#">Mens</a></li>
-          <li><a href="#">T-Shirt</a></li>
-          <li><a href="#">Hoodies</a></li>
-          <li><a href="#">Shirt</a></li>
+          <li><a href="#">Men's Collection</a></li>
+          <li><a href="#">Women's Collection</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Best Sellers</a></li>
         </ul>
       </div>
 
-      <div class="col">
-        <h4>Informations</h4>
+      <div class="footer-col">
+        <h4>Information</h4>
         <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Returns & Exchanges</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a href="#">FAQ</a></li>
           <li><a href="#">Track Order</a></li>
-          <li><a href="#">Returns Policy</a></li>
           <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
         </ul>
       </div>
 
-      <div class="col">
-        <h4>Account</h4>
-        <ul>
-          <li><a href="{% url 'shop:cart' %}">Cart</a></li>
-          <li><a href="#">My account</a></li>
-          <li><a href="#">My orders</a></li>
-          <li><a href="#">Wishlist</a></li>
-        </ul>
-      </div>
-
-      <div class="col">
-        <h4>Follow us</h4>
-        <ul class="social">
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">Facebook</a></li>
-          <li><a href="#">Youtube</a></li>
-        </ul>
-      </div>
-
-      <div class="col contact-col">
-        <h4>Contact</h4>
-        <p>127, Palam Station Road, Goripalayam, Madurai-2<br>
-        +91 63812 65402<br>
-        contact@timeo.co.in</p>
+      <div class="footer-col">
+        <h4>Contact Info</h4>
+        <div class="contact-info">
+          <p>📍 127, Palam Station Road, Goripalayam, Madurai-2</p>
+          <p>📞 +91 63812 65402</p>
+          <p>✉️ contact@timeo.co.in</p>
+        </div>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram">📷</a>
+          <a href="#" aria-label="Facebook">👤</a>
+          <a href="#" aria-label="YouTube">▶️</a>
+        </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      © TIMEO Demo — All rights reserved
+      <div class="footer-bottom-content">
+        <p>© 2024 TIMEO. All rights reserved.</p>
+        <div class="payment-methods">
+          <span>We accept:</span>
+          <span class="payment-icons">💳 🅿️ 📱</span>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

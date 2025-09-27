@@ -50,6 +50,11 @@
           </button>
 
           {% if user.is_authenticated %}
+            <a class="icon-btn" href="/accounts/profile/" title="Account" aria-label="Account">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </a>
             <button id="logoutBtn" class="icon-btn" title="Logout" aria-label="Logout">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                 <path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M7 6v12"/>
@@ -61,9 +66,11 @@
             </button>
           {% endif %}
 
-          <a class="icon-btn" href="{% url 'shop:cart' %}" title="Cart" aria-label="Cart">
+          <a class="icon-btn cart-btn" href="{% url 'shop:cart' %}" title="Cart" aria-label="Cart">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 6h15l-1.5 9h-11z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-            <span class="icon-badge">{{ cart.get_total_price|default:0 }}</span>
+            {% if cart and cart.get_total_quantity > 0 %}
+              <span class="icon-badge">{{ cart.get_total_quantity }}</span>
+            {% endif %}
           </a>
         </div>
       </div>
@@ -73,7 +80,7 @@
         {% if user.is_authenticated %}
           <div class="username-line">Hi, <strong>{{ user.username }}</strong></div>
         {% else %}
-          <div class="username-line muted">Welcome</div>
+          <div class="username-line muted">Welcome to TIMEO</div>
         {% endif %}
       </div>
     </div>

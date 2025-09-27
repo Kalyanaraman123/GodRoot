@@ -7,7 +7,6 @@
   }
 
   ready(function () {
-
     /* -----------------------
        1) AJAX cart add handler
        - If jQuery present use $.post fallback to reload
@@ -16,24 +15,26 @@
     function handleCartFormSubmit(e) {
       var form = e.target;
       if (!form || !form.action) return;
+      
       // Only handle our cart forms (URL starts with /cart/add/ or /cart/add)
       if (!form.action.includes('/cart/add')) return;
 
       e.preventDefault();
 
-      // collect data
+      // Collect data
       var formData = new FormData(form);
 
-      // prefer jQuery if available
+      // Prefer jQuery if available
       if (window.jQuery) {
         // Use jQuery POST and reload on success
-        window.jQuery.post(form.action, new URLSearchParams([...formData]).toString())
+        window.jQuery.post(form.action, window.jQuery.param(Object.fromEntries(formData)))
           .done(function (resp) {
-            alert('Added to cart');
-            location.reload();
+            showNotification('Added to cart');
+            // Update cart count without full page reload for better UX
+            updateCartCount();
           })
           .fail(function () {
-            alert('Could not add to cart (try again).');
+            showNotification('Could not add to cart (try again).', 'error');
           });
         return;
       }
@@ -43,7 +44,6 @@
         method: form.method ? form.method.toUpperCase() : 'POST',
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
-          // For fetch, do NOT set Content-Type here when using FormData
         },
         body: formData,
         credentials: 'same-origin'
@@ -53,153 +53,315 @@
         return r.json().catch(function(){ return {}; });
       })
       .then(function (data) {
-        // best-effort feedback
-        try { alert('Added to cart'); } catch (e) {}
-        // reload to update cart display; you can update DOM instead for nicer UX
-        location.reload();
+        showNotification('Added to cart');
+        updateCartCount();
       })
       .catch(function () {
-        alert('Could not add to cart (try again).');
+        showNotification('Could not add to cart (try again).', 'error');
       });
     }
 
-    // Attach submit listeners: delegate for dynamic forms
-    // For jQuery, delegation is handled separately below for convenience.
-    if (!window.jQuery) {
-      // vanilla delegation for forms with action including /cart/add
-      document.addEventListener('submit', function (ev) {
-        // If the event is from a form element, call handler
-        handleCartFormSubmit(ev);
-      }, true);
-    } else {
-      // jQuery delegation (works even if forms are added dynamically)
-      (function($){
-        $(document).on('submit', 'form[action*="/cart/add"]', function (e) {
-          e.preventDefault();
-          var $form = $(this);
-          var url = $form.attr('action');
-          var data = $form.serialize();
-          $.post(url, data)
-            .done(function(resp){
-              alert('Added to cart');
-              location.reload();
-            })
-            .fail(function(){
-              alert('Could not add to cart');
-            });
-        });
-      })(window.jQuery);
+    // Simple notification function
+    function showNotification(message, type = 'success') {
+      // Remove existing notification
+      var existingNotification = document.querySelector('.cart-notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+
+      var notification = document.createElement('div');
+      notification.className = 'cart-notification ' + type;
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'error' ? '#ff4444' : '#000'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 4px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
+
+      document.body.appendChild(notification);
+
+      // Auto remove after 3 seconds
+      setTimeout(function() {
+        if (notification.parentNode) {
+          notification.style.animation = 'slideOut 0.3s ease';
+          setTimeout(function() {
+            if (notification.parentNode) notification.remove();
+          }, 300);
+        }
+      }, 3000);
     }
 
+    // Update cart count function
+    function updateCartCount() {
+      // You can implement AJAX cart count update here
+      // For now, we'll do a soft reload of the page
+      setTimeout(function() {
+        // Instead of full page reload, you can fetch cart data and update the count
+        // This is a simplified version - you might want to implement proper cart API
+        var cartBadge = document.querySelector('.icon-badge');
+        if (cartBadge) {
+          var currentCount = parseInt(cartBadge.textContent) || 0;
+          cartBadge.textContent = currentCount + 1;
+        }
+      }, 500);
+    }
+
+    // Add CSS for animations
+    var style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Attach submit listeners
+    document.addEventListener('submit', function (ev) {
+      if (ev.target && ev.target.action && ev.target.action.includes('/cart/add')) {
+        handleCartFormSubmit(ev);
+      }
+    }, true);
 
     /* -----------------------
        2) Modal (quick view) handlers
-       - Closes on close-btn, outside click, or ESC
-       - Defines window.openQuick() and window.closeQuick()
        ----------------------- */
     var modal = document.getElementById('quickModal');
     if (modal) {
-      var modalCard = modal.querySelector('.modal-card') || modal.querySelector('.modal-inner') || null;
+      var modalCard = modal.querySelector('.modal-card') || modal.querySelector('.modal-inner');
 
-      // ensure closeQuick exists globally for inline onclick handlers
+      // Global close function
       window.closeQuick = function closeQuick() {
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
-        try { document.body.style.overflow = ''; } catch (e) {}
+        document.body.style.overflow = '';
       };
 
+      // Global open function
       window.openQuick = function openQuick(opts) {
         opts = opts || {};
         var img = opts.img, title = opts.title, price = opts.price, desc = opts.desc;
+        
         if (img) {
           var i = modal.querySelector('#qimg');
           if (i) i.src = img;
         }
         if (title) {
           var t = modal.querySelector('#qtitle');
-          if (t) t.innerText = title;
+          if (t) t.textContent = title;
         }
         if (price) {
           var p = modal.querySelector('#qprice');
-          if (p) p.innerText = price;
+          if (p) p.textContent = price;
         }
         if (desc) {
           var d = modal.querySelector('#qdesc');
-          if (d) d.innerText = desc;
+          if (d) d.textContent = desc;
         }
+        
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
-        try { document.body.style.overflow = 'hidden'; } catch (e) {}
+        document.body.style.overflow = 'hidden';
       };
 
-      // attach any internal close buttons
-      var closeBtns = modal.querySelectorAll('.close-btn, .btn.close, .btn[aria-label="Close"]');
-      closeBtns.forEach(function(b){ b.addEventListener('click', window.closeQuick); });
+      // Close buttons
+      var closeBtns = modal.querySelectorAll('.close-btn, .btn.close, [aria-label="Close"]');
+      closeBtns.forEach(function(b){ 
+        b.addEventListener('click', window.closeQuick); 
+      });
 
-      // backdrop click closes when clicking outside modalCard
+      // Backdrop click
       modal.addEventListener('click', function(ev){
         if (ev.target === modal) window.closeQuick();
       });
 
-      // ESC key closes modal
+      // ESC key
       document.addEventListener('keydown', function(ev){
         if ((ev.key === 'Escape' || ev.key === 'Esc') && modal.classList.contains('open')) {
           window.closeQuick();
         }
       });
-
-      // defensive: if modal left open on load, lock scroll
-      if (modal.classList.contains('open')) {
-        try { document.body.style.overflow = 'hidden'; } catch (e) {}
-      }
-    } // end modal exists
-
+    }
 
     /* -----------------------
-       3) Hamburger / drawer behavior (if present)
+       3) Search modal functionality
+       ----------------------- */
+    var searchBtn = document.getElementById('searchBtn');
+    var searchModal = document.getElementById('searchModal');
+    var searchClose = document.getElementById('searchClose');
+
+    if (searchBtn && searchModal) {
+      searchBtn.addEventListener('click', function() {
+        searchModal.style.display = 'flex';
+        searchModal.setAttribute('aria-hidden', 'false');
+        // Focus on search input when opened
+        var searchInput = searchModal.querySelector('input');
+        if (searchInput) searchInput.focus();
+      });
+
+      if (searchClose) {
+        searchClose.addEventListener('click', function() {
+          searchModal.style.display = 'none';
+          searchModal.setAttribute('aria-hidden', 'true');
+        });
+      }
+
+      // Close when clicking outside
+      searchModal.addEventListener('click', function(e) {
+        if (e.target === searchModal) {
+          searchModal.style.display = 'none';
+          searchModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      // ESC key to close search modal
+      document.addEventListener('keydown', function(e) {
+        if ((e.key === 'Escape' || e.key === 'Esc') && searchModal.style.display === 'flex') {
+          searchModal.style.display = 'none';
+          searchModal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+
+    /* -----------------------
+       4) Hamburger / drawer behavior
        ----------------------- */
     var hamburgerBtn = document.getElementById('hamburgerBtn');
     var drawer = document.getElementById('drawer');
+    var drawerClose = document.getElementById('drawerClose');
     var hamburgerDropdown = document.getElementById('hamburgerDropdown');
 
+    function closeAllMenus() {
+      if (drawer) {
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden', 'true');
+      }
+      if (hamburgerDropdown) {
+        hamburgerDropdown.classList.remove('open');
+        hamburgerDropdown.setAttribute('aria-hidden', 'true');
+      }
+      if (hamburgerBtn) {
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
     if (hamburgerBtn) {
-      hamburgerBtn.addEventListener('click', function () {
+      hamburgerBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
         var isMobile = window.innerWidth <= 880;
-        if (isMobile) {
-          if (drawer) {
-            var open = drawer.classList.toggle('open');
-            drawer.setAttribute('aria-hidden', !open);
-            hamburgerBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        
+        if (isMobile && drawer) {
+          var isOpen = drawer.classList.contains('open');
+          closeAllMenus();
+          if (!isOpen) {
+            drawer.classList.add('open');
+            drawer.setAttribute('aria-hidden', 'false');
+            hamburgerBtn.setAttribute('aria-expanded', 'true');
           }
-        } else {
-          if (hamburgerDropdown) {
-            var opend = hamburgerDropdown.classList.toggle('open');
-            hamburgerDropdown.setAttribute('aria-hidden', !opend);
-            hamburgerBtn.setAttribute('aria-expanded', opend ? 'true' : 'false');
+        } else if (hamburgerDropdown) {
+          var isOpen = hamburgerDropdown.classList.contains('open');
+          closeAllMenus();
+          if (!isOpen) {
+            hamburgerDropdown.classList.add('open');
+            hamburgerDropdown.setAttribute('aria-hidden', 'false');
+            hamburgerBtn.setAttribute('aria-expanded', 'true');
           }
         }
       });
     }
 
-    // close drawer/dropdown on outside click
-    document.addEventListener('click', function(e){
-      var t = e.target;
-      if (drawer && !drawer.contains(t) && hamburgerBtn && !hamburgerBtn.contains(t) && hamburgerDropdown && !hamburgerDropdown.contains(t)) {
-        drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
-        hamburgerDropdown.classList.remove('open'); hamburgerDropdown.setAttribute('aria-hidden', 'true');
-        if (hamburgerBtn) hamburgerBtn.setAttribute('aria-expanded','false');
+    // Close drawer/dropdown when clicking close button
+    if (drawerClose) {
+      drawerClose.addEventListener('click', closeAllMenus);
+    }
+
+    // Close menus when clicking outside
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      if (!drawer?.contains(target) && !hamburgerBtn?.contains(target) && !hamburgerDropdown?.contains(target)) {
+        closeAllMenus();
       }
     });
 
-    // close drawer/dropdown on resize crossing breakpoint
-    window.addEventListener('resize', function(){
-      if (!drawer || !hamburgerDropdown) return;
-      if (window.innerWidth <= 880) {
-        hamburgerDropdown.classList.remove('open'); hamburgerDropdown.setAttribute('aria-hidden','true');
-      } else {
-        drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true');
+    // Close menus on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        closeAllMenus();
       }
+    });
+
+    // Responsive behavior - close appropriate menu on resize
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 880 && drawer) {
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden', 'true');
+      } else if (hamburgerDropdown) {
+        hamburgerDropdown.classList.remove('open');
+        hamburgerDropdown.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    /* -----------------------
+       5) Login/Logout functionality
+       ----------------------- */
+    var logoutBtn = document.getElementById('logoutBtn');
+    var drawerLogout = document.getElementById('drawerLogout');
+    var loginBtn = document.getElementById('loginBtn');
+    var drawerLogin = document.getElementById('drawerLogin');
+
+    function handleLogout() {
+      window.location.href = '/accounts/logout/';
+    }
+
+    function handleLogin() {
+      window.location.href = '/accounts/login/';
+    }
+
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+    if (drawerLogout) drawerLogout.addEventListener('click', handleLogout);
+    if (loginBtn) loginBtn.addEventListener('click', handleLogin);
+    if (drawerLogin) drawerLogin.addEventListener('click', handleLogin);
+
+    /* -----------------------
+       6) Smooth scrolling for anchor links
+       ----------------------- */
+    document.addEventListener('click', function(e) {
+      if (e.target.matches('a[href^="#"]')) {
+        e.preventDefault();
+        var target = document.querySelector(e.target.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    });
+
+    /* -----------------------
+       7) Product card hover effects enhancement
+       ----------------------- */
+    var productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(function(card) {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
     });
 
   }); // end ready
+
 })(); // end IIFE
