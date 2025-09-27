@@ -89,11 +89,9 @@
           <div class="product-media">
             {% if p.images.all %}
               <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}" class="product-image">
-              {% else %}
-                {% with static_image='img/design-'|add:forloop.counter|add:'.jpg' %}
-                <img src="{% static static_image %}" alt="{{ p.title }}" class="product-image">
-                {% endwith %}
-              {% endif %}
+            {% else %}
+              <img src="https://picsum.photos/400/500?random={{ forloop.counter }}" alt="{{ p.title }}" class="product-image">
+            {% endif %}
             <div class="product-overlay">
               <a href="{% url 'shop:product_detail' p.slug %}" class="quick-view">Quick View</a>
             </div>
