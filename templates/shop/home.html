@@ -1,227 +1,39 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
-{% block head %}
-<link rel="stylesheet" href="{% static 'css/site.css' %}">
-<style>
-:root{
-  --grey-300:#D1D5DB;
-  --grey-200:#E6E9EE;
-  --grey-100:#F6F7F8;
-  --muted:#9B9B9B;
-  --black:#111111;
-  --white:#ffffff;
-  --site-max:1200px;
-  --gap:18px;
-  --radius:10px;
-}
 
-/* PAGE FRAME */
-body { background: var(--grey-100); color:var(--black); font-family: Inter, Arial, sans-serif; margin:0; }
-.site { max-width:var(--site-max); margin:22px auto; padding:0 18px; }
-
-/* TICKER */
-.ticker { background:var(--black); color:var(--white); padding:8px 14px; font-size:14px; display:flex; align-items:center; gap:12px; border-radius:8px; margin-bottom:14px; }
-.ticker .marquee { overflow:hidden; flex:1; margin-left:10px; }
-.ticker .track { display:inline-block; white-space:nowrap; will-change:transform; animation:scroll 18s linear infinite; }
-.ticker .marquee:hover .track { animation-play-state:paused; }
-@keyframes scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
-
-/* HEADER ROW */
-.header-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; position:relative; z-index:2100; }
-.left-controls { display:flex; align-items:center; gap:12px; }
-
-/* HAMBURGER */
-.hamburger { width:48px; height:48px; border-radius:10px; background:var(--white); border:1px solid var(--grey-300); display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; }
-.hamburger svg { width:20px;height:20px; display:block; }
-
-/* BRAND */
-.brand { font-weight:800; font-size:20px; letter-spacing:0.6px; color:var(--black); text-decoration:none; margin-left:6px; }
-
-/* HEADER RIGHT ICONS */
-.header-right { display:flex; align-items:center; gap:12px; }
-.icon-btn { width:44px;height:44px;border-radius:10px;background:var(--white);border:1px solid var(--grey-300);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;position:relative }
-.icon-btn svg{ width:20px;height:20px; display:block; }
-.icon-badge { position:absolute; right:6px; top:6px; background:var(--black); color:var(--white); font-size:11px;padding:3px 6px;border-radius:999px; font-weight:700; }
-
-/* small dropdown anchored to hamburger (desktop) */
-.hamburger-dropdown {
-  position:absolute; left:8px; top:62px; width:260px; background:var(--white); border-radius:10px; border:1px solid var(--grey-200);
-  box-shadow:0 10px 30px rgba(0,0,0,0.08); padding:12px; display:none; z-index:2200;
-}
-.hamburger-dropdown.open { display:block; }
-
-/* drawer (mobile / full) */
-.drawer { position:fixed; left:0; top:0; height:100vh; width:320px; max-width:86%; background:var(--white); box-shadow: 8px 0 40px rgba(17,17,17,0.08); padding:20px; transform:translateX(-120%); transition:transform .28s ease; z-index:2300; }
-.drawer.open { transform:translateX(0); }
-.drawer h3{ margin:6px 0 12px 0; font-size:18px }
-.drawer .navlist{ display:flex; flex-direction:column; gap:8px }
-.drawer .navlist a{ padding:10px 12px; border-radius:8px; color:var(--black); background:var(--grey-100); text-decoration:none; border:1px solid var(--grey-200) }
-
-/* HERO / COLLECTIONS / GRID — unchanged but responsive */
-.hero { display:flex; gap:20px; align-items:center; justify-content:space-between; background:var(--white); padding:26px; border-radius:12px; border:1px solid var(--grey-200); margin-bottom:22px; }
-.hero .left { max-width:56%; }
-.hero h1 { margin:0 0 8px 0; font-size:30px; letter-spacing:0.2px; }
-.hero p { margin:0; color:var(--muted); }
-.collections { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:22px; }
-.col-card { position:relative; height:260px; overflow:hidden; border-radius:10px; border:1px solid var(--grey-200); background:var(--grey-100); }
-.col-card img{ width:100%; height:100%; object-fit:cover; display:block; }
-.col-card .cap { position:absolute; left:18px; bottom:18px; background:rgba(0,0,0,0.6); color:#fff; padding:10px 14px; border-radius:8px; font-weight:700; }
-
-/* product grid */
-.products-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
-@media(max-width:1100px){ .products-grid{grid-template-columns:repeat(3,1fr);} }
-@media(max-width:800px){ .products-grid{grid-template-columns:repeat(2,1fr);} .hero .left{max-width:100%} }
-@media(max-width:560px){ .products-grid{grid-template-columns:1fr} }
-
-/* product card */
-.card { background:var(--white); border-radius:10px; border:1px solid var(--grey-200); overflow:hidden; display:flex; flex-direction:column; transition:transform .16s ease, box-shadow .16s ease; }
-.card:hover{ transform:translateY(-6px); box-shadow:0 18px 40px rgba(17,17,17,0.06); }
-.card .media{ height:300px; background:var(--grey-100); display:flex; align-items:center; justify-content:center; }
-.card .media img{ width:100%; height:100%; object-fit:cover; }
-.card .body{ padding:12px 14px; display:flex; flex-direction:column; gap:8px }
-
-/* small helpers */
-.price { font-weight:800; font-size:16px; }
-.muted { color:var(--muted); font-size:13px; }
-.footer { text-align:center; color:var(--muted); padding:26px 0; margin-top:26px; border-top:1px solid var(--grey-200); }
-
-/* responsive visibility: hide hamburger-dropdown on small screens (use drawer instead) */
-@media (max-width: 880px) {
-  .hamburger-dropdown { display:none !important; }
-  .header-row { padding-right:6px; }
-}
-/* hide center nav in all breakpoints (we keep nav in drawer only) */
-.header-row nav.nav { display:none; }
-</style>
-{% endblock %}
+{% block title %}TIMEO — Home{% endblock %}
 
 {% block content %}
-<div class="site">
-
-  <!-- TICKER -->
-  <div class="ticker" role="region" aria-label="Top offers">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div style="font-weight:700;color:var(--white)">OFFER</div>
-      <div class="marquee" aria-hidden="false">
-        <div class="track" aria-hidden="true">
-          <span style="margin-right:40px;">FLAT 20% OFF on first order • Free shipping on ₹999+ • New Autumn Collection</span>
-          <span style="margin-right:40px;">Buy 2 get 1 on selected tees • Code GODROOT20</span>
-          <span style="margin-right:40px;">FLAT 20% OFF on first order • Free shipping on ₹999+</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HEADER -->
-  <div class="header-row">
-    <div class="left-controls">
-      <!-- hamburger (opens drawer & toggles dropdown on desktop) -->
-      <button id="hamburgerBtn" class="hamburger" aria-label="Open menu" aria-expanded="false">
-        <!-- simple bars SVG -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M3 12h18M3 18h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-
-      <!-- anchored desktop dropdown (shows next to hamburger) -->
-      <div id="hamburgerDropdown" class="hamburger-dropdown" role="menu" aria-hidden="true">
-        <strong style="display:block;margin-bottom:8px">Menu</strong>
-        <nav style="display:flex;flex-direction:column;gap:6px">
-          <a href="#men" style="padding:8px;border-radius:8px;color:var(--black);text-decoration:none">Men</a>
-          <a href="#women" style="padding:8px;border-radius:8px;color:var(--black);text-decoration:none">Women</a>
-          <a href="#collections" style="padding:8px;border-radius:8px;color:var(--black);text-decoration:none">Collections</a>
-          <a href="#new" style="padding:8px;border-radius:8px;color:var(--black);text-decoration:none">New</a>
-          <hr style="border:none;border-top:1px solid var(--grey-200);margin:8px 0">
-          {% for cat in categories %}
-            <a href="{% url 'shop:home' %}?category={{ cat.slug }}" style="padding:8px;border-radius:8px;color:var(--black);text-decoration:none">{{ cat.name }}</a>
-          {% empty %}
-            <div class="muted">No categories</div>
-          {% endfor %}
-        </nav>
-     </div>
-    </div>
-
-    <!-- center nav intentionally hidden (menu inside hamburger) -->
-    <nav class="nav" aria-hidden="true"></nav>
-
-    <!-- RIGHT icons -->
-    <div class="header-right" aria-label="Account and cart">
-      {% if user.is_authenticated %}
-        <!-- account icon: link to account/profile -->
-        <a class="icon-btn" href="/accounts/profile/" title="Account">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/><path d="M6 20v-1c0-2.21 3.58-4 6-4s6 1.79 6 4v1"/></svg>
-        </a>
-        <!-- logout icon -->
-        <a class="icon-btn" href="{% url 'logout' %}" title="Logout">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M7 6v12"/></svg>
-        </a>
-      {% else %}
-        <!-- login icon -->
-        <a class="icon-btn" href="{% url 'login' %}" title="Login">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
-        </a>
-      {% endif %}
-
-      <!-- cart icon -->
-      <a class="icon-btn" href="{% url 'shop:cart' %}" title="Cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6h15l-1.5 9h-11z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-        <span class="icon-badge">{{ cart.get_total_price|default:0 }}</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- SIDE DRAWER (mobile) - full nav -->
-  <aside id="drawer" class="drawer" aria-hidden="true">
-    <h3>Menu</h3>
-    <nav class="navlist" role="navigation">
-      <a href="#men">Men</a>
-      <a href="#women">Women</a>
-      <a href="#collections">Collections</a>
-      <a href="#new">New</a>
-      <hr style="border:none;border-top:1px solid var(--grey-200);margin:8px 0">
-      {% for cat in categories %}
-        <a href="{% url 'shop:home' %}?category={{ cat.slug }}">{{ cat.name }}</a>
-      {% empty %}
-        <div class="muted">No categories</div>
-      {% endfor %}
-    </nav>
-
-    <div style="margin-top:18px; display:flex; gap:8px;">
-      {% if user.is_authenticated %}
-        <a class="small-btn" href="/accounts/profile/">Account</a>
-        <a class="small-btn" href="{% url 'logout' %}">Logout</a>
-      {% else %}
-        <a class="small-btn" href="{% url 'login' %}">Login</a>
-      {% endif %}
-      <a class="small-btn" href="{% url 'shop:cart' %}">Cart</a>
-    </div>
-  </aside>
-
+<div class="content-container">
   <!-- HERO -->
-  <section class="hero" role="region" aria-label="Featured">
-    <div class="left">
+  <section class="hero">
+    <div class="hero-left">
       <h1>Modern wardrobe essentials — refined</h1>
       <p class="muted">Black, white and grey staples made with premium fabrics. Free delivery on orders over ₹999.</p>
-      <div class="cta" style="margin-top:14px"><a class="btn" href="#collections">Shop Collections</a></div>
+      <div class="hero-cta">
+        <a class="btn-primary" href="#collections">Shop Collections</a>
+      </div>
     </div>
-    <div class="right">
-      <img src="https://picsum.photos/id/1005/900/600" alt="Hero" style="width:420px;height:280px;object-fit:cover;border-radius:8px; border:1px solid var(--grey-200)">
+    <div class="hero-right">
+      <img src="https://picsum.photos/900/600?random=12" alt="Hero image">
     </div>
   </section>
 
   <!-- COLLECTIONS -->
-  <section id="collections" class="collections" aria-label="Collections">
+  <section id="collections" class="collections">
     <div class="col-card">
-      <img src="https://picsum.photos/id/1011/1200/900" alt="Mens Collection">
-      <div class="cap">Women’s Collection</div>
+      <img src="https://picsum.photos/1200/900?random=21" alt="Collection 1">
+      <div class="cap">Men's Collection</div>
     </div>
     <div class="col-card">
-      <img src="https://picsum.photos/id/1012/1200/900" alt="Womens Collection">
-      <div class="cap">Men’s Collection</div>
+      <img src="https://picsum.photos/1200/900?random=22" alt="Collection 2">
+      <div class="cap">Women's Collection</div>
     </div>
   </section>
 
-  <!-- PRODUCTS -->
-  <section aria-label="Featured products" style="margin-top:8px">
-    <h2 style="margin:0 0 14px 6px; font-size:20px">Featured Products</h2>
+  <!-- PRODUCTS GRID - 4 per row, ABSOLUTELY NO MARGINS -->
+  <section class="products">
+    <h2>Featured Products</h2>
     <div class="products-grid">
       {% for p in products %}
         {% with first_variant=p.variants.all|first %}
@@ -230,7 +42,7 @@ body { background: var(--grey-100); color:var(--black); font-family: Inter, Aria
             {% if p.images.all %}
               <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}">
             {% else %}
-              <img src="https://picsum.photos/seed/{{ p.id }}/800/800" alt="{{ p.title }}">
+              <img src="https://picsum.photos/800/800?random={{ forloop.counter }}" alt="{{ p.title }}">
             {% endif %}
           </div>
           <div class="body">
@@ -238,9 +50,9 @@ body { background: var(--grey-100); color:var(--black); font-family: Inter, Aria
             {% if first_variant %}
               <div class="price">₹{{ first_variant.price }}</div>
             {% else %}
-              <div class="price">Price not set</div>
+              <div class="price">—</div>
             {% endif %}
-            <div class="muted" style="margin-top:6px">
+            <div class="muted sizes">
               {% if p.variants.exists %}
                 Sizes:
                 {% for v in p.variants.all %}
@@ -250,10 +62,11 @@ body { background: var(--grey-100); color:var(--black); font-family: Inter, Aria
                 —
               {% endif %}
             </div>
-            <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+
+            <div class="card-actions">
               <a class="small-btn" href="{% url 'shop:product_detail' p.slug %}">View</a>
               {% if first_variant %}
-                <form method="post" action="{% url 'shop:cart_add' first_variant.id %}" style="display:inline;">
+                <form method="post" action="{% url 'shop:cart_add' first_variant.id %}" class="inline-form">
                   {% csrf_token %}
                   <input type="hidden" name="quantity" value="1">
                   <button class="small-btn" type="submit">Add</button>
@@ -264,82 +77,66 @@ body { background: var(--grey-100); color:var(--black); font-family: Inter, Aria
         </article>
         {% endwith %}
       {% empty %}
-        <div class="muted">No products available.</div>
+        <div class="muted" style="grid-column: 1 / -1; text-align: center; padding: 40px;">No products available.</div>
       {% endfor %}
     </div>
   </section>
-
-  <footer class="footer">© TIMEO Demo — Grayscale frame, colorful images.</footer>
 </div>
 
-<!-- QUICKVIEW (optional) -->
-<div id="quickModal" class="modal" aria-hidden="true">
-  <div class="modal-card">
-    <div style="padding:18px"><img id="qimg" src="" alt="" style="width:100%;height:100%;object-fit:cover;"></div>
-    <div style="padding:18px">
-      <h3 id="qtitle"></h3>
-      <div id="qprice" style="font-weight:800;margin-top:8px"></div>
-      <p id="qdesc" class="muted" style="margin-top:12px"></p>
-      <div style="margin-top:16px"><button class="btn" onclick="closeQuick()">Close</button></div>
+<!-- FOOTER -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#">Mens</a></li>
+          <li><a href="#">T-Shirt</a></li>
+          <li><a href="#">Hoodies</a></li>
+          <li><a href="#">Shirt</a></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h4>Informations</h4>
+        <ul>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Returns Policy</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms and Conditions</a></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="{% url 'shop:cart' %}">Cart</a></li>
+          <li><a href="#">My account</a></li>
+          <li><a href="#">My orders</a></li>
+          <li><a href="#">Wishlist</a></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h4>Follow us</h4>
+        <ul class="social">
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Youtube</a></li>
+        </ul>
+      </div>
+
+      <div class="col contact-col">
+        <h4>Contact</h4>
+        <p>127, Palam Station Road, Goripalayam, Madurai-2<br>
+        +91 63812 65402<br>
+        contact@timeo.co.in</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © TIMEO Demo — All rights reserved
     </div>
   </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-/* Elements */
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const drawer = document.getElementById('drawer');
-const hamburgerDropdown = document.getElementById('hamburgerDropdown');
-
-/* Toggle drawer (mobile) */
-hamburgerBtn.addEventListener('click', (e) => {
-  const isMobile = window.innerWidth <= 880;
-  if (isMobile) {
-    const open = drawer.classList.toggle('open');
-    drawer.setAttribute('aria-hidden', !open);
-    hamburgerBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  } else {
-    // desktop: toggle anchored dropdown
-    const open = hamburgerDropdown.classList.toggle('open');
-    hamburgerDropdown.setAttribute('aria-hidden', !open);
-    hamburgerBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  }
-});
-
-/* Close drawer / dropdown on outside click */
-document.addEventListener('click', (e) => {
-  const target = e.target;
-  if (!drawer.contains(target) && !hamburgerBtn.contains(target) && !hamburgerDropdown.contains(target)) {
-    drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
-    hamburgerDropdown.classList.remove('open'); hamburgerDropdown.setAttribute('aria-hidden','true');
-    hamburgerBtn.setAttribute('aria-expanded','false');
-  }
-});
-
-/* Auto-switch: if resizing to mobile while dropdown open, close dropdown */
-window.addEventListener('resize', () => {
-  if (window.innerWidth <= 880) {
-    hamburgerDropdown.classList.remove('open'); hamburgerDropdown.setAttribute('aria-hidden','true');
-  } else {
-    drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true');
-  }
-});
-
-/* Quick view helpers (same as before) */
-function openQuickBtn(el){
-  const card = el.closest('.card');
-  if(!card) return;
-  const img = card.querySelector('img')?.src || '';
-  const title = card.dataset.title || '';
-  const price = card.querySelector('.price')?.innerText || '';
-  document.getElementById('qimg').src = img;
-  document.getElementById('qtitle').innerText = title;
-  document.getElementById('qprice').innerText = price;
-  document.getElementById('quickModal').classList.add('open');
-  document.getElementById('quickModal').setAttribute('aria-hidden','false');
-}
-function closeQuick(){ document.getElementById('quickModal').classList.remove('open'); document.getElementById('quickModal').setAttribute('aria-hidden','true'); }
-</script>
+</footer>
 {% endblock %}
