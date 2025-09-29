@@ -1,227 +1,186 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}GodRoot — Home{% endblock %}
+{% block title %}GodRoot — Premium Fashion Store{% endblock %}
 
 {% block content %}
-<div class="content-container">
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-left">
-      <h1>Modern wardrobe essentials — refined</h1>
-      <p class="hero-subtitle">Black, white and grey staples made with premium fabrics. Free delivery on orders over ₹999.</p>
-      <div class="hero-cta">
-        <a class="btn-primary" href="#collections">Shop Collections</a>
-        <a class="btn-secondary" href="#products">Browse All</a>
+<!-- Hero Banner -->
+<section class="hero-banner">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Elevate Your Style with Premium Fashion</h1>
+      <p>Discover the perfect blend of comfort, quality, and style with our curated collection</p>
+      <div class="hero-buttons">
+        <a href="{% url 'shop:home' %}?category=men" class="btn btn-primary">Shop Men</a>
+        <a href="{% url 'shop:home' %}?category=women" class="btn btn-secondary">Shop Women</a>
       </div>
     </div>
-    <div class="hero-right">
-      <img src="{% static 'img/design2.jpeg' %}" alt="Hero image" class="hero-image">
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FEATURES -->
-  <section class="features">
-    <div class="feature-grid">
-      <div class="feature-item">
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature">
         <div class="feature-icon">🚚</div>
         <h3>Free Shipping</h3>
         <p>On orders over ₹999</p>
       </div>
-      <div class="feature-item">
+      <div class="feature">
         <div class="feature-icon">↩️</div>
         <h3>Easy Returns</h3>
         <p>30-day return policy</p>
       </div>
-      <div class="feature-item">
+      <div class="feature">
         <div class="feature-icon">🔒</div>
         <h3>Secure Payment</h3>
         <p>100% secure transactions</p>
       </div>
-      <div class="feature-item">
+      <div class="feature">
         <div class="feature-icon">⭐</div>
         <h3>Premium Quality</h3>
         <p>Premium fabrics & craftsmanship</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- COLLECTIONS -->
-  <section id="collections" class="collections">
-    <div class="section-header">
-      <h2>Collections</h2>
-      <p>Explore our curated collections</p>
-    </div>
-    <div class="collections-grid">
-      <div class="collection-card">
-        <div class="collection-image">
-           <img src="{% static 'img/design1.jpeg' %}" alt="Men's Collection">
+<!-- Categories Section -->
+<section class="categories-section">
+  <div class="container">
+    <h2 class="section-title">Shop By Category</h2>
+    <div class="categories-grid">
+      <div class="category-card">
+        <div class="category-image">
+          <img src="{% static 'img/men-category.jpg' %}" alt="Men's Collection" onerror="this.src='https://via.placeholder.com/400x500/333/fff?text=Men'">
         </div>
-        <div class="collection-content">
+        <div class="category-content">
           <h3>Men's Collection</h3>
-          <p>Essential styles for everyday wear</p>
-          <a href="{% url 'shop:home' %}?category=men" class="collection-link">Shop Now →</a>
+          <p>Stylish and comfortable clothing for men</p>
+          <a href="{% url 'shop:home' %}?category=men" class="category-link">Shop Now →</a>
         </div>
       </div>
-      <div class="collection-card">
-        <div class="collection-image">
-          <img src="{% static 'img/design2.jpeg' %}" alt="Women's Collection">
+      <div class="category-card">
+        <div class="category-image">
+          <img src="{% static 'img/women-category.jpg' %}" alt="Women's Collection" onerror="this.src='https://via.placeholder.com/400x500/333/fff?text=Women'">
         </div>
-        <div class="collection-content">
+        <div class="category-content">
           <h3>Women's Collection</h3>
-          <p>Timeless pieces for modern women</p>
-          <a href="{% url 'shop:home' %}?category=women" class="collection-link">Shop Now →</a>
+          <p>Elegant and trendy outfits for women</p>
+          <a href="{% url 'shop:home' %}?category=women" class="category-link">Shop Now →</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- PRODUCTS GRID -->
-  <section id="products" class="products">
-    <div class="section-header">
-      <h2>Featured Products</h2>
-      <p>Our most popular essentials</p>
-    </div>
-    <div class="products-grid">
-      {% for p in products %}
-        {% with first_variant=p.variants.all|first %}
-        <article class="product-card" data-id="{{ p.id }}" data-title="{{ p.title|escapejs }}">
-          <div class="product-media">
-           {% if p.images.all %}
-  <img src="{{ p.images.all.0.image.url }}" alt="{{ p.title }}" class="product-image">
-{% else %}
-  {% if forloop.counter == 1 %}
-    <img src="{% static 'img/design1.jpeg' %}" alt="{{ p.title }}" class="product-image">
-  {% elif forloop.counter == 2 %}
-    <img src="{% static 'img/design2.jpeg' %}" alt="{{ p.title }}" class="product-image">
-  {% elif forloop.counter == 3 %}
-    <img src="{% static 'img/design3.jpeg' %}" alt="{{ p.title }}" class="product-image">
-  {% else %}
-    <img src="{% static 'img/design4.jpeg' %}" alt="{{ p.title }}" class="product-image">
-  {% endif %}
-{% endif %}
-            <div class="product-overlay">
-              <a href="{% url 'shop:product_detail' p.slug %}" class="quick-view">Quick View</a>
-            </div>
-          </div>
-          <div class="product-body">
-            <h3 class="product-title">{{ p.title }}</h3>
-            {% if first_variant %}
-              <div class="product-price">₹{{ first_variant.price }}</div>
-            {% else %}
-              <div class="product-price">—</div>
-            {% endif %}
-            <div class="product-sizes">
-              {% if p.variants.exists %}
-                Sizes:
-                {% for v in p.variants.all %}
-                  <span class="size-tag">{{ v.size }}</span>{% if not forloop.last %} {% endif %}
-                {% endfor %}
-              {% else %}
-                —
-              {% endif %}
-            </div>
-
-            <div class="product-actions">
-              <a class="btn-product" href="{% url 'shop:product_detail' p.slug %}">View Details</a>
-              {% if first_variant %}
-                <form method="post" action="{% url 'shop:cart_add' first_variant.id %}" class="inline-form">
-                  {% csrf_token %}
-                  <input type="hidden" name="quantity" value="1">
-                  <button class="btn-product add-to-cart" type="submit">Add to Cart</button>
-                </form>
-              {% endif %}
-            </div>
-          </div>
-        </article>
-        {% endwith %}
-      {% empty %}
-        <div class="no-products" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
-          <h3>No products available at the moment</h3>
-          <p class="muted">Check back soon for new arrivals!</p>
+      <div class="category-card">
+        <div class="category-image">
+          <img src="{% static 'img/new-arrivals.jpg' %}" alt="New Arrivals" onerror="this.src='https://via.placeholder.com/400x500/333/fff?text=New+Arrivals'">
         </div>
-      {% endfor %}
-    </div>
-  </section>
-
-  <!-- NEWSLETTER -->
-  <section class="newsletter">
-    <div class="newsletter-content">
-      <h2>Stay Updated</h2>
-      <p>Get early access to new collections and exclusive offers</p>
-      <form class="newsletter-form">
-        <input type="email" placeholder="Enter your email" class="newsletter-input">
-        <button type="submit" class="btn-primary">Subscribe</button>
-      </form>
-    </div>
-  </section>
-</div>
-
-<!-- FOOTER -->
-<footer class="site-footer" role="contentinfo">
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <div class="footer-brand">
-          <img src="{% static 'img/logo.png' %}" alt="GodRoot" class="footer-logo">
-          <p>Modern wardrobe essentials — refined</p>
-        </div>
-      </div>
-
-      <div class="footer-col">
-        <h4>Shop</h4>
-        <ul>
-          <li><a href="#">Men's Collection</a></li>
-          <li><a href="#">Women's Collection</a></li>
-          <li><a href="#">New Arrivals</a></li>
-          <li><a href="#">Best Sellers</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Information</h4>
-        <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Shipping Policy</a></li>
-          <li><a href="#">Returns & Exchanges</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Customer Service</h4>
-        <ul>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Track Order</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms & Conditions</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
-        <h4>Contact Info</h4>
-        <div class="contact-info">
-          <p>📍 No 7, Jothi Nagar, KS Theatre Main Road, Mannarai Post, Tirupur - 641607</p>
-          <p>📞 +91 63741 28878</p>
-          <p>✉️ godroot77@gmail.com</p>
-        </div>
-        <div class="social-links">
-          <a href="#" aria-label="Instagram">📷</a>
-          <a href="#" aria-label="Facebook">👤</a>
-          <a href="#" aria-label="YouTube">▶️</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="footer-bottom-content">
-        <p>© 2025 GodRoot. All rights reserved.</p>
-        <div class="payment-methods">
-          <span>We accept:</span>
-          <span class="payment-icons">💳 🅿️ 📱</span>
+        <div class="category-content">
+          <h3>New Arrivals</h3>
+          <p>Latest trends and fresh styles</p>
+          <a href="{% url 'shop:home' %}?category=new-arrivals" class="category-link">Explore →</a>
         </div>
       </div>
     </div>
   </div>
-</footer>
+</section>
+
+<!-- Featured Products -->
+<section class="products-section">
+  <div class="container">
+    <h2 class="section-title">Featured Products</h2>
+    <p class="section-subtitle">Our most popular essentials</p>
+    
+    <div class="products-grid">
+      {% for product in products %}
+      <div class="product-card">
+        <div class="product-image">
+          {% if product.images.all %}
+            <img src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}">
+          {% else %}
+            {% if forloop.counter == 1 %}
+              <img src="{% static 'img/product1.jpg' %}" alt="{{ product.title }}" onerror="this.src='https://via.placeholder.com/300x400/eee/333?text=Product+{{ forloop.counter }}'">
+            {% elif forloop.counter == 2 %}
+              <img src="{% static 'img/product2.jpg' %}" alt="{{ product.title }}" onerror="this.src='https://via.placeholder.com/300x400/eee/333?text=Product+{{ forloop.counter }}'">
+            {% elif forloop.counter == 3 %}
+              <img src="{% static 'img/product3.jpg' %}" alt="{{ product.title }}" onerror="this.src='https://via.placeholder.com/300x400/eee/333?text=Product+{{ forloop.counter }}'">
+            {% else %}
+              <img src="{% static 'img/product4.jpg' %}" alt="{{ product.title }}" onerror="this.src='https://via.placeholder.com/300x400/eee/333?text=Product+{{ forloop.counter }}'">
+            {% endif %}
+          {% endif %}
+          <div class="product-actions">
+            <button class="wishlist-btn" data-product="{{ product.id }}">❤️</button>
+            <a href="{% url 'shop:product_detail' product.slug %}" class="quick-view">Quick View</a>
+          </div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">{{ product.title }}</h3>
+          <p class="product-category">{{ product.category.name|default:"Fashion" }}</p>
+          <div class="product-price">
+            {% with first_variant=product.variants.all|first %}
+              {% if first_variant %}
+                ₹{{ first_variant.price }}
+                {% if first_variant.original_price %}
+                  <span class="original-price">₹{{ first_variant.original_price }}</span>
+                  <span class="discount">{{ first_variant.discount_percentage }}% OFF</span>
+                {% endif %}
+              {% else %}
+                <span>Price not available</span>
+              {% endif %}
+            {% endwith %}
+          </div>
+          <div class="product-sizes">
+            {% if product.variants.exists %}
+              Sizes: 
+              {% for variant in product.variants.all|slice:":4" %}
+                <span class="size">{{ variant.size }}</span>
+              {% endfor %}
+              {% if product.variants.count > 4 %}
+                <span class="more-sizes">+{{ product.variants.count|add:"-4" }} more</span>
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="product-buttons">
+            <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-outline">View Details</a>
+            {% with first_variant=product.variants.all|first %}
+              {% if first_variant %}
+                <form method="post" action="{% url 'shop:cart_add' first_variant.id %}" class="add-to-cart-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="btn btn-primary">Add to Cart</button>
+                </form>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="no-products">
+        <h3>No products available at the moment</h3>
+        <p>Check back soon for new arrivals!</p>
+      </div>
+      {% endfor %}
+    </div>
+    
+    {% if products %}
+    <div class="view-all">
+      <a href="{% url 'shop:home' %}" class="btn btn-outline">View All Products</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Get early access to new collections and exclusive offers</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
 {% endblock %}

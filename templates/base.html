@@ -3,148 +3,220 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}GodRoot — Site{% endblock %}</title>
+  <title>{% block title %}GodRoot — Premium Fashion{% endblock %}</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/site.css' %}">
   {% block head %}{% endblock %}
 </head>
 <body>
-  <!-- FULL-BLEED HEADER BACKGROUND -->
-  <header class="site-header" role="banner">
-    <div class="header-inner">
-      <!-- top row (hamburger left, logo center, actions right) -->
-      <div class="header-top">
-        <!-- left: hamburger + anchored dropdown (desktop) -->
-        <div class="left">
-          <button id="hamburgerBtn" class="hamburger" aria-label="Open menu" aria-expanded="false" type="button">
-            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-          </button>
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container">
+      <p>FLAT 20% OFF on first order • Free shipping on ₹999+ • Use code GODROOT20</p>
+    </div>
+  </div>
 
-          <div id="hamburgerDropdown" class="hamburger-dropdown" aria-hidden="true">
-            <nav>
-              <a href="#men">Men</a>
-              <a href="#women">Women</a>
-              <a href="#collections">Collections</a>
-              <a href="#new">New</a>
-              <hr>
-              {% for cat in categories %}
-                <a href="{% url 'shop:home' %}?category={{ cat.slug }}">{{ cat.name }}</a>
-              {% empty %}
-                <div class="muted">No categories</div>
-              {% endfor %}
-            </nav>
-          </div>
-        </div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-        <!-- center: logo -->
-        <div class="brand-wrap" role="link">
-          <a href="{% url 'shop:home' %}" class="brand-link">
-            <img src="{% static 'img/logo.png' %}" alt="GodRoot" class="logo-img">
+        <!-- Logo -->
+        <div class="logo">
+          <a href="{% url 'shop:home' %}">
+            <h1>GODROOT</h1>
           </a>
         </div>
 
-        <!-- right: actions -->
-        <div class="header-actions" role="toolbar" aria-label="Top actions">
-          <button id="searchBtn" class="icon-btn" title="Search" aria-label="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <!-- Navigation -->
+        <nav class="main-nav">
+          <a href="{% url 'shop:home' %}">Home</a>
+          <div class="nav-dropdown">
+            <a href="#">Men <span>▼</span></a>
+            <div class="dropdown-menu">
+              <a href="{% url 'shop:home' %}?category=men-tshirts">T-Shirts</a>
+              <a href="{% url 'shop:home' %}?category=men-shirts">Shirts</a>
+              <a href="{% url 'shop:home' %}?category=men-hoodies">Hoodies</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <a href="#">Women <span>▼</span></a>
+            <div class="dropdown-menu">
+              <a href="{% url 'shop:home' %}?category=women-tshirts">T-Shirts</a>
+              <a href="{% url 'shop:home' %}?category=women-tops">Tops</a>
+              <a href="{% url 'shop:home' %}?category=women-dresses">Dresses</a>
+            </div>
+          </div>
+          <a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a>
+          <a href="{% url 'shop:home' %}?category=collections">Collections</a>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <button class="search-btn" id="searchBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+              <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"/>
+            </svg>
           </button>
 
           {% if user.is_authenticated %}
-            <a class="icon-btn" href="/accounts/profile/" title="Account" aria-label="Account">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-              </svg>
-            </a>
-            <button id="logoutBtn" class="icon-btn" title="Logout" aria-label="Logout">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                <path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M7 6v12"/>
-              </svg>
-            </button>
+            <div class="user-dropdown">
+              <button class="user-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </button>
+              <div class="dropdown-menu">
+                <a href="/accounts/profile/">My Account</a>
+                <a href="/accounts/orders/">My Orders</a>
+                <hr>
+                <button id="logoutBtn">Logout</button>
+              </div>
+            </div>
           {% else %}
-            <button id="loginBtn" class="login-btn" title="Login" aria-label="Login">
-              Login
-            </button>
+            <button class="login-btn" id="loginBtn">Login</button>
           {% endif %}
 
-          <a class="icon-btn cart-btn" href="{% url 'shop:cart' %}" title="Cart" aria-label="Cart">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 6h15l-1.5 9h-11z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+          <a href="{% url 'shop:cart' %}" class="cart-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M6 6h15l-1.5 9h-11z" stroke="currentColor" stroke-width="2"/>
+              <circle cx="9" cy="20" r="1" fill="currentColor"/>
+              <circle cx="18" cy="20" r="1" fill="currentColor"/>
+            </svg>
             {% if cart and cart.get_total_quantity > 0 %}
-              <span class="icon-badge">{{ cart.get_total_quantity }}</span>
+              <span class="cart-count">{{ cart.get_total_quantity }}</span>
             {% endif %}
           </a>
         </div>
       </div>
 
-      <!-- second row: username line at right-most -->
-      <div class="header-bottom">
-        {% if user.is_authenticated %}
-          <div class="username-line">Hi, <strong>{{ user.username }}</strong></div>
-        {% else %}
-          <div class="username-line muted">Welcome to GodRoot</div>
-        {% endif %}
+      <!-- Search Bar -->
+      <div class="search-bar" id="searchBar">
+        <div class="search-container">
+          <input type="text" placeholder="Search for products, brands and more..." id="searchInput">
+          <button class="search-close" id="searchClose">✕</button>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- FULL-BLEED TICKER -->
-  <div class="site-ticker" role="region" aria-label="Top offers">
-    <div class="ticker">
-      <div class="ticker-inner">
-        <strong>OFFER</strong>
-        <div class="marquee" aria-hidden="false">
-          <div class="track">FLAT 20% OFF on first order • Free shipping on ₹999+ • New Autumn Collection — Buy 2 get 1 on selected tees • Use code GodRoot20</div>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+      <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
+    </div>
+    <nav class="mobile-nav">
+      <a href="{% url 'shop:home' %}">Home</a>
+      <div class="mobile-nav-item">
+        <button class="mobile-nav-toggle">Men</button>
+        <div class="mobile-submenu">
+          <a href="{% url 'shop:home' %}?category=men-tshirts">T-Shirts</a>
+          <a href="{% url 'shop:home' %}?category=men-shirts">Shirts</a>
+          <a href="{% url 'shop:home' %}?category=men-hoodies">Hoodies</a>
         </div>
       </div>
+      <div class="mobile-nav-item">
+        <button class="mobile-nav-toggle">Women</button>
+        <div class="mobile-submenu">
+          <a href="{% url 'shop:home' %}?category=women-tshirts">T-Shirts</a>
+          <a href="{% url 'shop:home' %}?category=women-tops">Tops</a>
+          <a href="{% url 'shop:home' %}?category=women-dresses">Dresses</a>
+        </div>
+      </div>
+      <a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a>
+      <a href="{% url 'shop:home' %}?category=collections">Collections</a>
+    </nav>
+    <div class="mobile-menu-footer">
+      {% if user.is_authenticated %}
+        <a href="/accounts/profile/" class="mobile-menu-btn">My Account</a>
+        <button id="mobileLogoutBtn" class="mobile-menu-btn">Logout</button>
+      {% else %}
+        <button id="mobileLoginBtn" class="mobile-menu-btn">Login</button>
+      {% endif %}
     </div>
   </div>
 
-  <!-- SEARCH MODAL -->
-  <div id="searchModal" class="modal" aria-hidden="true" style="display:none;">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Search">
-      <button id="searchClose" class="close-btn" aria-label="Close">✕</button>
-      <h3>Search products</h3>
-      <form id="searchForm" method="get" action="{% url 'shop:home' %}">
-        <input name="q" id="q" placeholder="Search for t-shirt, hoodie, shirt..." class="search-input" />
-      </form>
-    </div>
-  </div>
-
-  <!-- MOBILE DRAWER -->
-  <aside id="drawer" class="drawer" aria-hidden="true">
-    <div class="drawer-inner">
-      <div style="display:flex;justify-content:flex-end;">
-        <button id="drawerClose" class="drawer-close" aria-label="Close">✕</button>
-      </div>
-
-      <nav class="drawer-nav" style="margin-top:12px; display:flex;flex-direction:column; gap:8px;">
-        <a href="#men">Men</a>
-        <a href="#women">Women</a>
-        <a href="#collections">Collections</a>
-        <a href="#new">New</a>
-        <hr>
-        {% for cat in categories %}
-          <a href="{% url 'shop:home' %}?category={{ cat.slug }}">{{ cat.name }}</a>
-        {% empty %}
-          <div class="muted">No categories</div>
-        {% endfor %}
-      </nav>
-
-      <div style="margin-top:18px; display:flex; flex-direction:column; gap:10px;">
-        {% if user.is_authenticated %}
-          <a class="small-btn" href="/accounts/profile/">Account</a>
-          <button id="drawerLogout" class="small-btn" type="button">Logout</button>
-        {% else %}
-          <button id="drawerLogin" class="small-btn" type="button">Login</button>
-        {% endif %}
-        <a class="small-btn" href="{% url 'shop:cart' %}">Cart</a>
-      </div>
-    </div>
-  </aside>
-
-  <!-- SITE CONTENT (ABSOLUTELY NO MARGINS) -->
-  <main class="site">
+  <!-- Main Content -->
+  <main class="main-content">
     {% block content %}{% endblock %}
   </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <h2>GODROOT</h2>
+            <p>Premium Fashion for Everyone</p>
+          </div>
+          <div class="social-links">
+            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="Facebook">👤</a>
+            <a href="#" aria-label="YouTube">▶️</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>SHOP</h3>
+          <ul>
+            <li><a href="{% url 'shop:home' %}?category=men">Men</a></li>
+            <li><a href="{% url 'shop:home' %}?category=women">Women</a></li>
+            <li><a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a></li>
+            <li><a href="{% url 'shop:home' %}?category=best-sellers">Best Sellers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h3>HELP</h3>
+          <ul>
+            <li><a href="#">Shipping Info</a></li>
+            <li><a href="#">Returns & Exchanges</a></li>
+            <li><a href="#">Size Guide</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h3>CONTACT</h3>
+          <div class="contact-info">
+            <p>📍 No 7, Jothi Nagar, Tirupur - 641607</p>
+            <p>📞 +91 63741 28878</p>
+            <p>✉️ godroot77@gmail.com</p>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>NEWSLETTER</h3>
+          <p>Subscribe for updates and exclusive offers</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email" required>
+            <button type="submit">Subscribe</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="payment-methods">
+          <span>We accept:</span>
+          <div class="payment-icons">
+            <span>💳</span>
+            <span>🅿️</span>
+            <span>📱</span>
+          </div>
+        </div>
+        <p>&copy; 2025 GodRoot. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 
   <script src="{% static 'js/site.js' %}"></script>
   {% block scripts %}{% endblock %}
