@@ -1,224 +1,229 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}GodRoot — Premium Fashion{% endblock %}</title>
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'css/site.css' %}">
-  {% block head %}{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GodRoot - Online Fashion Store{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-  <!-- Announcement Bar -->
-  <div class="announcement-bar">
-    <div class="container">
-      <p>FLAT 20% OFF on first order • Free shipping on ₹999+ • Use code GODROOT20</p>
-    </div>
-  </div>
-
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container">
-      <div class="header-main">
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <!-- Logo -->
-        <div class="logo">
-          <a href="{% url 'shop:home' %}">
-            <h1>GODROOT</h1>
-          </a>
+    <!-- Top Announcement Bar -->
+    <div class="announcement-bar">
+        <div class="container">
+            <p>FLAT 20% OFF ON FIRST ORDER • FREE SHIPPING ON ₹999+ • USE CODE: GODROOT20</p>
         </div>
+    </div>
 
-        <!-- Navigation -->
-        <nav class="main-nav">
-          <a href="{% url 'shop:home' %}">Home</a>
-          <div class="nav-dropdown">
-            <a href="#">Men <span>▼</span></a>
-            <div class="dropdown-menu">
-              <a href="{% url 'shop:home' %}?category=men-tshirts">T-Shirts</a>
-              <a href="{% url 'shop:home' %}?category=men-shirts">Shirts</a>
-              <a href="{% url 'shop:home' %}?category=men-hoodies">Hoodies</a>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-main">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <nav class="main-nav">
+                        <a href="{% url 'shop:home' %}">Home</a>
+                        <div class="nav-dropdown">
+                            <a href="#">Men <i class="fas fa-chevron-down"></i></a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'shop:home' %}?category=men-tshirts">T-Shirts</a>
+                                <a href="{% url 'shop:home' %}?category=men-shirts">Shirts</a>
+                                <a href="{% url 'shop:home' %}?category=men-hoodies">Hoodies</a>
+                                <a href="{% url 'shop:home' %}?category=men-jeans">Jeans</a>
+                            </div>
+                        </div>
+                        <div class="nav-dropdown">
+                            <a href="#">Women <i class="fas fa-chevron-down"></i></a>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'shop:home' %}?category=women-tops">Tops</a>
+                                <a href="{% url 'shop:home' %}?category=women-dresses">Dresses</a>
+                                <a href="{% url 'shop:home' %}?category=women-jeans">Jeans</a>
+                                <a href="{% url 'shop:home' %}?category=women-kurtas">Kurtas</a>
+                            </div>
+                        </div>
+                        <a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a>
+                        <a href="{% url 'shop:home' %}?category=best-sellers">Best Sellers</a>
+                    </nav>
+                </div>
+
+                <div class="header-center">
+                    <a href="{% url 'shop:home' %}" class="logo">
+                        GODROOT
+                    </a>
+                </div>
+
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="search-btn" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        
+                        {% if user.is_authenticated %}
+                        <div class="user-dropdown">
+                            <button class="user-btn">
+                                <i class="far fa-user"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="/accounts/profile/"><i class="fas fa-user"></i> My Account</a>
+                                <a href="/accounts/orders/"><i class="fas fa-shopping-bag"></i> My Orders</a>
+                                <a href="/accounts/wishlist/"><i class="fas fa-heart"></i> Wishlist</a>
+                                <hr>
+                                <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                            </div>
+                        </div>
+                        {% else %}
+                        <button class="login-btn" id="loginBtn">
+                            <i class="far fa-user"></i>
+                        </button>
+                        {% endif %}
+
+                        <a href="{% url 'shop:cart' %}" class="cart-btn">
+                            <i class="fas fa-shopping-bag"></i>
+                            {% if cart and cart.get_total_quantity > 0 %}
+                            <span class="cart-count">{{ cart.get_total_quantity }}</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="nav-dropdown">
-            <a href="#">Women <span>▼</span></a>
-            <div class="dropdown-menu">
-              <a href="{% url 'shop:home' %}?category=women-tshirts">T-Shirts</a>
-              <a href="{% url 'shop:home' %}?category=women-tops">Tops</a>
-              <a href="{% url 'shop:home' %}?category=women-dresses">Dresses</a>
+
+            <!-- Search Bar -->
+            <div class="search-bar" id="searchBar">
+                <div class="search-container">
+                    <input type="text" placeholder="Search for products, brands and more..." id="searchInput">
+                    <button class="search-close" id="searchClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
-          </div>
-          <a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a>
-          <a href="{% url 'shop:home' %}?category=collections">Collections</a>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <button class="mobile-menu-close" id="mobileMenuClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="mobile-nav">
+            <a href="{% url 'shop:home' %}">Home</a>
+            
+            <div class="mobile-nav-item">
+                <button class="mobile-nav-toggle">Men <i class="fas fa-chevron-down"></i></button>
+                <div class="mobile-submenu">
+                    <a href="{% url 'shop:home' %}?category=men-tshirts">T-Shirts</a>
+                    <a href="{% url 'shop:home' %}?category=men-shirts">Shirts</a>
+                    <a href="{% url 'shop:home' %}?category=men-hoodies">Hoodies</a>
+                    <a href="{% url 'shop:home' %}?category=men-jeans">Jeans</a>
+                </div>
+            </div>
+            
+            <div class="mobile-nav-item">
+                <button class="mobile-nav-toggle">Women <i class="fas fa-chevron-down"></i></button>
+                <div class="mobile-submenu">
+                    <a href="{% url 'shop:home' %}?category=women-tops">Tops</a>
+                    <a href="{% url 'shop:home' %}?category=women-dresses">Dresses</a>
+                    <a href="{% url 'shop:home' %}?category=women-jeans">Jeans</a>
+                    <a href="{% url 'shop:home' %}?category=women-kurtas">Kurtas</a>
+                </div>
+            </div>
+            
+            <a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a>
+            <a href="{% url 'shop:home' %}?category=best-sellers">Best Sellers</a>
         </nav>
-
-        <!-- Header Actions -->
-        <div class="header-actions">
-          <button class="search-btn" id="searchBtn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
-              <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2"/>
-            </svg>
-          </button>
-
-          {% if user.is_authenticated %}
-            <div class="user-dropdown">
-              <button class="user-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </button>
-              <div class="dropdown-menu">
-                <a href="/accounts/profile/">My Account</a>
-                <a href="/accounts/orders/">My Orders</a>
-                <hr>
-                <button id="logoutBtn">Logout</button>
-              </div>
-            </div>
-          {% else %}
-            <button class="login-btn" id="loginBtn">Login</button>
-          {% endif %}
-
-          <a href="{% url 'shop:cart' %}" class="cart-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M6 6h15l-1.5 9h-11z" stroke="currentColor" stroke-width="2"/>
-              <circle cx="9" cy="20" r="1" fill="currentColor"/>
-              <circle cx="18" cy="20" r="1" fill="currentColor"/>
-            </svg>
-            {% if cart and cart.get_total_quantity > 0 %}
-              <span class="cart-count">{{ cart.get_total_quantity }}</span>
+        
+        <div class="mobile-menu-footer">
+            {% if user.is_authenticated %}
+            <a href="/accounts/profile/" class="mobile-menu-btn">My Account</a>
+            <button id="mobileLogoutBtn" class="mobile-menu-btn">Logout</button>
+            {% else %}
+            <button id="mobileLoginBtn" class="mobile-menu-btn">Login</button>
             {% endif %}
-          </a>
         </div>
-      </div>
-
-      <!-- Search Bar -->
-      <div class="search-bar" id="searchBar">
-        <div class="search-container">
-          <input type="text" placeholder="Search for products, brands and more..." id="searchInput">
-          <button class="search-close" id="searchClose">✕</button>
-        </div>
-      </div>
     </div>
-  </header>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <div class="mobile-menu-header">
-      <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
-    </div>
-    <nav class="mobile-nav">
-      <a href="{% url 'shop:home' %}">Home</a>
-      <div class="mobile-nav-item">
-        <button class="mobile-nav-toggle">Men</button>
-        <div class="mobile-submenu">
-          <a href="{% url 'shop:home' %}?category=men-tshirts">T-Shirts</a>
-          <a href="{% url 'shop:home' %}?category=men-shirts">Shirts</a>
-          <a href="{% url 'shop:home' %}?category=men-hoodies">Hoodies</a>
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <h3>GODROOT</h3>
+                        <p>Premium Fashion Store</p>
+                    </div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>SHOP</h4>
+                    <ul>
+                        <li><a href="{% url 'shop:home' %}?category=men">Men's Collection</a></li>
+                        <li><a href="{% url 'shop:home' %}?category=women">Women's Collection</a></li>
+                        <li><a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a></li>
+                        <li><a href="{% url 'shop:home' %}?category=best-sellers">Best Sellers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>HELP</h4>
+                    <ul>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>CONTACT</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt"></i> No 7, Jothi Nagar, Tirupur - 641607</p>
+                        <p><i class="fas fa-phone"></i> +91 63741 28878</p>
+                        <p><i class="fas fa-envelope"></i> godroot77@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>NEWSLETTER</h4>
+                    <p>Subscribe for updates and exclusive offers</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="payment-methods">
+                    <span>We accept:</span>
+                    <div class="payment-icons">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-paypal"></i>
+                        <i class="fab fa-cc-apple-pay"></i>
+                    </div>
+                </div>
+                <p>&copy; 2025 GodRoot. All rights reserved.</p>
+            </div>
         </div>
-      </div>
-      <div class="mobile-nav-item">
-        <button class="mobile-nav-toggle">Women</button>
-        <div class="mobile-submenu">
-          <a href="{% url 'shop:home' %}?category=women-tshirts">T-Shirts</a>
-          <a href="{% url 'shop:home' %}?category=women-tops">Tops</a>
-          <a href="{% url 'shop:home' %}?category=women-dresses">Dresses</a>
-        </div>
-      </div>
-      <a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a>
-      <a href="{% url 'shop:home' %}?category=collections">Collections</a>
-    </nav>
-    <div class="mobile-menu-footer">
-      {% if user.is_authenticated %}
-        <a href="/accounts/profile/" class="mobile-menu-btn">My Account</a>
-        <button id="mobileLogoutBtn" class="mobile-menu-btn">Logout</button>
-      {% else %}
-        <button id="mobileLoginBtn" class="mobile-menu-btn">Login</button>
-      {% endif %}
-    </div>
-  </div>
+    </footer>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    {% block content %}{% endblock %}
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <div class="footer-logo">
-            <h2>GODROOT</h2>
-            <p>Premium Fashion for Everyone</p>
-          </div>
-          <div class="social-links">
-            <a href="#" aria-label="Instagram">📷</a>
-            <a href="#" aria-label="Facebook">👤</a>
-            <a href="#" aria-label="YouTube">▶️</a>
-          </div>
-        </div>
-
-        <div class="footer-section">
-          <h3>SHOP</h3>
-          <ul>
-            <li><a href="{% url 'shop:home' %}?category=men">Men</a></li>
-            <li><a href="{% url 'shop:home' %}?category=women">Women</a></li>
-            <li><a href="{% url 'shop:home' %}?category=new-arrivals">New Arrivals</a></li>
-            <li><a href="{% url 'shop:home' %}?category=best-sellers">Best Sellers</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h3>HELP</h3>
-          <ul>
-            <li><a href="#">Shipping Info</a></li>
-            <li><a href="#">Returns & Exchanges</a></li>
-            <li><a href="#">Size Guide</a></li>
-            <li><a href="#">FAQs</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h3>CONTACT</h3>
-          <div class="contact-info">
-            <p>📍 No 7, Jothi Nagar, Tirupur - 641607</p>
-            <p>📞 +91 63741 28878</p>
-            <p>✉️ godroot77@gmail.com</p>
-          </div>
-        </div>
-
-        <div class="footer-section">
-          <h3>NEWSLETTER</h3>
-          <p>Subscribe for updates and exclusive offers</p>
-          <form class="newsletter-form">
-            <input type="email" placeholder="Enter your email" required>
-            <button type="submit">Subscribe</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div class="payment-methods">
-          <span>We accept:</span>
-          <div class="payment-icons">
-            <span>💳</span>
-            <span>🅿️</span>
-            <span>📱</span>
-          </div>
-        </div>
-        <p>&copy; 2025 GodRoot. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="{% static 'js/site.js' %}"></script>
-  {% block scripts %}{% endblock %}
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
