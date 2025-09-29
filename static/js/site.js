@@ -1,6 +1,7 @@
 // Sticky header
 (function(){
   const header = document.getElementById('siteHeader');
+  if(!header) return;
   const onScroll = () => {
     if(window.scrollY > 8) header.classList.add('is-stuck');
     else header.classList.remove('is-stuck');
@@ -27,7 +28,7 @@
   });
 })();
 
-// Mobile drawer
+// Mobile drawer + submenus
 (function(){
   const drawer = document.getElementById('mobileMenu');
   const open = document.getElementById('menuToggle');
@@ -42,7 +43,6 @@
     if(e.target === drawer) setOpen(false);
   });
 
-  // Submenus
   drawer.querySelectorAll('.mobile-nav-toggle').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const sub = btn.nextElementSibling;
@@ -52,14 +52,14 @@
     });
   });
 
-  // Optional: wire login/logout if needed
+  // Optional convenience
   const mLogin = document.getElementById('mobileLoginBtn');
   const mLogout = document.getElementById('mobileLogoutBtn');
   mLogin && mLogin.addEventListener('click', ()=> window.location.href='/accounts/login/');
   mLogout && mLogout.addEventListener('click', ()=> document.getElementById('logoutBtn')?.click());
 })();
 
-// Desktop nav dropdowns on click for accessibility (also works on hover via CSS)
+// Desktop nav dropdowns on click (along with hover via CSS)
 (function(){
   document.querySelectorAll('.nav-dropdown .nav-link').forEach(btn=>{
     const menu = btn.parentElement.querySelector('.dropdown-menu');
@@ -76,7 +76,7 @@
   });
 })();
 
-// Hero slider
+// Hero slider with autoplay + dots + arrows
 (function(){
   const slider = document.getElementById('heroSlider');
   if(!slider) return;
@@ -118,4 +118,17 @@
 
   goto(0);
   autoplay();
+})();
+
+// Product image hover: swap to alt image if provided
+(function(){
+  document.querySelectorAll('.product-card[data-hover-alt="true"] .product-image img').forEach(img=>{
+    const alt = img.getAttribute('data-alt');
+    if(!alt) return;
+    const orig = img.getAttribute('src');
+    img.addEventListener('mouseenter', ()=> img.setAttribute('src', alt));
+    img.addEventListener('mouseleave', ()=> img.setAttribute('src', orig));
+    img.addEventListener('focus', ()=> img.setAttribute('src', alt));
+    img.addEventListener('blur', ()=> img.setAttribute('src', orig));
+  });
 })();

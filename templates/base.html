@@ -5,16 +5,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>{% block title %}GodRoot - Online Fashion Store{% endblock %}</title>
+
+  <!-- Fonts + Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/site.css' %}?v=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="{% static 'css/site.css' %}?v=1.1">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-  <!-- Top Announcement Bar -->
+  <!-- Announcement -->
   <div class="announcement-bar">
     <div class="container">
       <p>FLAT 20% OFF ON FIRST ORDER • FREE SHIPPING ON ₹999+ • USE CODE: GODROOT20</p>
@@ -35,9 +39,7 @@
             <a href="{% url 'shop:home' %}">Home</a>
 
             <div class="nav-dropdown">
-              <button class="nav-link">
-                Men <i class="fas fa-chevron-down"></i>
-              </button>
+              <button class="nav-link">Men <i class="fas fa-chevron-down"></i></button>
               <div class="dropdown-menu">
                 <a href="{% url 'shop:home' %}?category=men-tshirts">T-Shirts</a>
                 <a href="{% url 'shop:home' %}?category=men-shirts">Shirts</a>
@@ -47,9 +49,7 @@
             </div>
 
             <div class="nav-dropdown">
-              <button class="nav-link">
-                Women <i class="fas fa-chevron-down"></i>
-              </button>
+              <button class="nav-link">Women <i class="fas fa-chevron-down"></i></button>
               <div class="dropdown-menu">
                 <a href="{% url 'shop:home' %}?category=women-tops">Tops</a>
                 <a href="{% url 'shop:home' %}?category=women-dresses">Dresses</a>
@@ -114,7 +114,6 @@
           </button>
         </div>
       </div>
-
     </div>
   </header>
 
@@ -240,7 +239,8 @@
     </div>
   </footer>
 
-  <script src="{% static 'js/site.js' %}?v=1.0"></script>
+  <!-- Scripts -->
+  <script src="{% static 'js/site.js' %}?v=1.1"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -5,6 +5,17 @@
 
 {% block content %}
 
+<!-- USP strip -->
+<section class="usp-strip">
+  <div class="container">
+    <div class="usp-grid">
+      <div class="usp-item"><i class="fa-solid fa-truck"></i> Free shipping above ₹999</div>
+      <div class="usp-item"><i class="fa-solid fa-rotate-left"></i> 7-day easy returns</div>
+      <div class="usp-item"><i class="fa-solid fa-headset"></i> Support 10AM–7PM</div>
+    </div>
+  </div>
+</section>
+
 <!-- Hero Banner -->
 <section class="hero-banner">
   <div class="hero-slider" id="heroSlider">
@@ -47,30 +58,24 @@
   </div>
 </section>
 
-<!-- Categories -->
-<section class="categories-section">
+<!-- Collections Strip (3-up wide banners) -->
+<section class="collections-strip">
   <div class="container">
-    <h2 class="section-title">Shop By Category</h2>
-    <div class="categories-grid">
-      <a class="category-card" href="{% url 'shop:home' %}?category=men">
-        <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=900&q=80" alt="Men's Collection" />
-        <div class="category-overlay">
-          <h3>Men's Collection</h3>
-          <span class="btn btn-outline">Shop Now</span>
+    <div class="collections-grid">
+      <a href="{% url 'shop:home' %}?category=men" class="collection-card" style="--img:url('https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop')">
+        <div class="collection-overlay">
+          <h3>Men</h3>
+          <span class="btn btn-outline">Shop Men</span>
         </div>
       </a>
-
-      <a class="category-card" href="{% url 'shop:home' %}?category=women">
-        <img src="https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?auto=format&fit=crop&w=900&q=80" alt="Women's Collection" />
-        <div class="category-overlay">
-          <h3>Women's Collection</h3>
-          <span class="btn btn-outline">Shop Now</span>
+      <a href="{% url 'shop:home' %}?category=women" class="collection-card" style="--img:url('https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?q=80&w=1200&auto=format&fit=crop')">
+        <div class="collection-overlay">
+          <h3>Women</h3>
+          <span class="btn btn-outline">Shop Women</span>
         </div>
       </a>
-
-      <a class="category-card" href="{% url 'shop:home' %}?category=new-arrivals">
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=80" alt="New Arrivals" />
-        <div class="category-overlay">
+      <a href="{% url 'shop:home' %}?category=new-arrivals" class="collection-card" style="--img:url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200&auto=format&fit=crop')">
+        <div class="collection-overlay">
           <h3>New Arrivals</h3>
           <span class="btn btn-outline">Explore</span>
         </div>
@@ -89,10 +94,15 @@
 
     <div class="products-grid">
       {% for product in products %}
-      <div class="product-card">
+      <div class="product-card" data-hover-alt="true">
         <a href="{% url 'shop:product_detail' product.slug %}" class="product-image">
           {% if product.images.all %}
-            <img src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}" loading="lazy" />
+            {% with img0=product.images.all.0 image1=product.images.all.1 %}
+              <img 
+                src="{{ img0.image.url }}" 
+                {% if image1 %}data-alt="{{ image1.image.url }}"{% endif %}
+                alt="{{ product.title }}" loading="lazy" />
+            {% endwith %}
           {% else %}
             <img src="https://via.placeholder.com/600x800/eee/333?text=Product+Image" alt="{{ product.title }}" loading="lazy" />
           {% endif %}
@@ -149,7 +159,7 @@
   </div>
 </section>
 
-<!-- Banner / CTA -->
+<!-- Sale Banner -->
 <section class="banner-section">
   <div class="container">
     <div class="banner-card">
