@@ -4,156 +4,177 @@
 {% block title %}GodRoot - Premium Fashion Store{% endblock %}
 
 {% block content %}
+
 <!-- Hero Banner -->
 <section class="hero-banner">
-    <div class="hero-slider">
-        <div class="hero-slide active">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>Summer Collection 2025</h1>
-                    <p>Discover the latest trends in fashion with our exclusive summer collection</p>
-                    <a href="{% url 'shop:home' %}?category=new-arrivals" class="btn btn-primary">Shop Now</a>
-                </div>
-            </div>
+  <div class="hero-slider" id="heroSlider">
+    <!-- Slide 1 -->
+    <div class="hero-slide active" style="--bg:url('https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1600&auto=format&fit=crop');">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Summer Collection 2025</h1>
+          <p>Discover the latest trends in fashion with our exclusive summer collection</p>
+          <a href="{% url 'shop:home' %}?category=new-arrivals" class="btn btn-primary">Shop Now</a>
         </div>
+      </div>
     </div>
+
+    <!-- Slide 2 -->
+    <div class="hero-slide" style="--bg:url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop');">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Fresh Fits for Everyone</h1>
+          <p>Minimal silhouettes, premium cottons, everyday comfort</p>
+          <a href="{% url 'shop:home' %}?category=best-sellers" class="btn btn-outline">Explore</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="hero-slide" style="--bg:url('https://images.unsplash.com/photo-1503342217505-b0a15cf70489?q=80&w=1600&auto=format&fit=crop');">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Up to 50% OFF</h1>
+          <p>Big savings on selected styles — limited time</p>
+          <a href="{% url 'shop:home' %}?category=sale" class="btn btn-primary">Shop Sale</a>
+        </div>
+      </div>
+    </div>
+
+    <button class="hero-nav prev" id="heroPrev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+    <button class="hero-nav next" id="heroNext" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
 </section>
 
-<!-- Categories Section -->
+<!-- Categories -->
 <section class="categories-section">
-    <div class="container">
-        <h2 class="section-title">Shop By Category</h2>
-        <div class="categories-grid">
-            <div class="category-card">
-                <div class="category-image">
-                    <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Men's Collection">
-                </div>
-                <div class="category-content">
-                    <h3>Men's Collection</h3>
-                    <a href="{% url 'shop:home' %}?category=men" class="btn btn-outline">Shop Now</a>
-                </div>
-            </div>
-            
-            <div class="category-card">
-                <div class="category-image">
-                    <img src="https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Women's Collection">
-                </div>
-                <div class="category-content">
-                    <h3>Women's Collection</h3>
-                    <a href="{% url 'shop:home' %}?category=women" class="btn btn-outline">Shop Now</a>
-                </div>
-            </div>
-            
-            <div class="category-card">
-                <div class="category-image">
-                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="New Arrivals">
-                </div>
-                <div class="category-content">
-                    <h3>New Arrivals</h3>
-                    <a href="{% url 'shop:home' %}?category=new-arrivals" class="btn btn-outline">Explore</a>
-                </div>
-            </div>
+  <div class="container">
+    <h2 class="section-title">Shop By Category</h2>
+    <div class="categories-grid">
+      <a class="category-card" href="{% url 'shop:home' %}?category=men">
+        <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=900&q=80" alt="Men's Collection" />
+        <div class="category-overlay">
+          <h3>Men's Collection</h3>
+          <span class="btn btn-outline">Shop Now</span>
         </div>
+      </a>
+
+      <a class="category-card" href="{% url 'shop:home' %}?category=women">
+        <img src="https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?auto=format&fit=crop&w=900&q=80" alt="Women's Collection" />
+        <div class="category-overlay">
+          <h3>Women's Collection</h3>
+          <span class="btn btn-outline">Shop Now</span>
+        </div>
+      </a>
+
+      <a class="category-card" href="{% url 'shop:home' %}?category=new-arrivals">
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=80" alt="New Arrivals" />
+        <div class="category-overlay">
+          <h3>New Arrivals</h3>
+          <span class="btn btn-outline">Explore</span>
+        </div>
+      </a>
     </div>
+  </div>
 </section>
 
 <!-- Featured Products -->
 <section class="products-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Featured Products</h2>
-            <a href="{% url 'shop:home' %}" class="view-all">View All</a>
-        </div>
-        
-        <div class="products-grid">
-            {% for product in products %}
-            <div class="product-card">
-                <div class="product-image">
-                    {% if product.images.all %}
-                        <img src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}">
-                    {% else %}
-                        <img src="https://via.placeholder.com/300x400/eee/333?text=Product+Image" alt="{{ product.title }}">
-                    {% endif %}
-                    <div class="product-badge">New</div>
-                    <div class="product-actions">
-                        <button class="wishlist-btn" data-product="{{ product.id }}">
-                            <i class="far fa-heart"></i>
-                        </button>
-                        <a href="{% url 'shop:product_detail' product.slug %}" class="quick-view">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">{{ product.title }}</h3>
-                    <p class="product-category">{{ product.category.name|default:"Fashion" }}</p>
-                    <div class="product-price">
-                        {% with first_variant=product.variants.all|first %}
-                            {% if first_variant %}
-                                ₹{{ first_variant.price }}
-                                {% if first_variant.original_price %}
-                                    <span class="original-price">₹{{ first_variant.original_price }}</span>
-                                    <span class="discount">{{ first_variant.discount_percentage }}% OFF</span>
-                                {% endif %}
-                            {% else %}
-                                <span>Price not available</span>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                    <div class="product-sizes">
-                        {% if product.variants.exists %}
-                            Sizes: 
-                            {% for variant in product.variants.all|slice:":4" %}
-                                <span class="size">{{ variant.size }}</span>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                    <div class="product-buttons">
-                        <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-outline">View Details</a>
-                        {% with first_variant=product.variants.all|first %}
-                            {% if first_variant %}
-                                <form method="post" action="{% url 'shop:cart_add' first_variant.id %}" class="add-to-cart-form">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
-                                </form>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="no-products">
-                <h3>No products available at the moment</h3>
-                <p>Check back soon for new arrivals!</p>
-            </div>
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Featured Products</h2>
+      <a href="{% url 'shop:home' %}" class="view-all">View All</a>
+    </div>
+
+    <div class="products-grid">
+      {% for product in products %}
+      <div class="product-card">
+        <a href="{% url 'shop:product_detail' product.slug %}" class="product-image">
+          {% if product.images.all %}
+            <img src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}" loading="lazy" />
+          {% else %}
+            <img src="https://via.placeholder.com/600x800/eee/333?text=Product+Image" alt="{{ product.title }}" loading="lazy" />
+          {% endif %}
+          <span class="product-badge">New</span>
+        </a>
+        <div class="product-info">
+          <h3 class="product-title"><a href="{% url 'shop:product_detail' product.slug %}">{{ product.title }}</a></h3>
+          <p class="product-category">{{ product.category.name|default:"Fashion" }}</p>
+
+          <div class="product-price">
+            {% with first_variant=product.variants.all|first %}
+              {% if first_variant %}
+                ₹{{ first_variant.price }}
+                {% if first_variant.original_price %}
+                  <span class="original-price">₹{{ first_variant.original_price }}</span>
+                  <span class="discount">{{ first_variant.discount_percentage }}% OFF</span>
+                {% endif %}
+              {% else %}
+                <span>Price not available</span>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          {% if product.variants.exists %}
+          <div class="product-sizes">
+            Sizes:
+            {% for variant in product.variants.all|slice:":4" %}
+              <span class="size">{{ variant.size }}</span>
             {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="product-buttons">
+            <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-outline">View</a>
+            {% with first_variant=product.variants.all|first %}
+            {% if first_variant %}
+              <form method="post" action="{% url 'shop:cart_add' first_variant.id %}" class="add-to-cart-form">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="btn btn-primary">Add to Cart</button>
+              </form>
+            {% endif %}
+            {% endwith %}
+          </div>
         </div>
+      </div>
+      {% empty %}
+      <div class="no-products">
+        <h3>No products available at the moment</h3>
+        <p>Check back soon for new arrivals!</p>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </section>
 
-<!-- Banner Section -->
+<!-- Banner / CTA -->
 <section class="banner-section">
-    <div class="container">
-        <div class="banner-content">
-            <h2>Summer Sale</h2>
-            <p>Up to 50% OFF on selected items</p>
-            <a href="{% url 'shop:home' %}?category=sale" class="btn btn-primary">Shop Sale</a>
-        </div>
+  <div class="container">
+    <div class="banner-card">
+      <div class="banner-copy">
+        <h2>Summer Sale</h2>
+        <p>Up to 50% OFF on selected items</p>
+        <a href="{% url 'shop:home' %}?category=sale" class="btn btn-primary">Shop Sale</a>
+      </div>
+      <div class="banner-art" style="--img:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1400&auto=format&fit=crop');"></div>
     </div>
+  </div>
 </section>
 
-<!-- Newsletter Section -->
+<!-- Newsletter -->
 <section class="newsletter-section">
-    <div class="container">
-        <div class="newsletter-content">
-            <h2>Subscribe to Our Newsletter</h2>
-            <p>Get updates on new arrivals, special offers and more</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email address" required>
-                <button type="submit" class="btn btn-primary">Subscribe</button>
-            </form>
-        </div>
+  <div class="container">
+    <div class="newsletter-content">
+      <h2>Subscribe to Our Newsletter</h2>
+      <p>Get updates on new arrivals, special offers and more</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email address" required />
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
     </div>
+  </div>
 </section>
+
 {% endblock %}
